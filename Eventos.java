@@ -1,5 +1,6 @@
 package Simulacion;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Eventos
 {
@@ -27,6 +28,7 @@ public class Eventos
     ArrayList<Integer> filaCP1 = new ArrayList<>();
     ArrayList<Integer> filaCP2 = new ArrayList<>();
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
+    Random m_random;
     
     public void llegaArchivoA(int horaEvento)
     {
@@ -300,5 +302,37 @@ public class Eventos
             /* Se libera línea 1 = infinito */
             linea1 = true;
         }
+    }
+
+    /**
+     * Numeros aleatorios con distribucion exponencial con media de 5 segundos
+     */
+    public double proximoArriboA(){
+        //CREO QUE ESTE ESTA BIEN ASI TENGO QUE VERIFICARLO
+        int lambda = 5;
+        double x, r;
+        r = m_random.nextDouble();
+        x = ((-Math.log(1-r))/lambda);
+        return x;
+    }
+
+
+    /**
+     * Numeros aleatorios con distribucion f(x)=x/40 8<=x<=12
+     * ESTE ES EL QUE ME  HACE FALTA VER COMO SE HACE RICARDO
+     */
+    public double proximoArriboB(){
+    }
+
+    /**
+     * Numeros aleatorios con distibicion normal con media 5 y varianza 1 
+     */
+    public double proximoArriboC(){
+       double x, z, r1, r2;  
+       r1 = m_random.nextDouble() ;
+       r2 = m_random.nextDouble() ;
+       z=(Math.sqrt(-2*Math.log(r1)))*Math.sin(2*Math.PI*r2);
+       x=1*z+5; 
+       return x;
     }
 }
