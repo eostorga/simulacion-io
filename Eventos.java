@@ -4,9 +4,7 @@ import java.util.Random;
 
 public class Eventos
 {
-    int reloj;
-    int tiempo;
-    int tiempoToken;
+    double reloj, tiempo, tiempoToken;
     int filaA;
     int filaB;
     int filaC;
@@ -21,6 +19,7 @@ public class Eventos
     boolean enviar = false;
     boolean linea1 = true;
     boolean linea2 = true;
+    double[] eventos;
     ArrayList<Integer> filaAP1 = new ArrayList<>();
     ArrayList<Integer> filaAP2 = new ArrayList<>();
     ArrayList<Integer> filaBP1 = new ArrayList<>();
@@ -29,6 +28,28 @@ public class Eventos
     ArrayList<Integer> filaCP2 = new ArrayList<>();
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
     Random m_random;
+    
+    public Eventos()
+    {
+        eventos = new double[13]; // Número total de eventos.
+        inicializarEventos();
+    }
+    
+    public void setToken(double tiempoUsoToken)
+    {
+        tiempoToken = tiempoUsoToken;
+    }
+    
+    public void inicializarEventos()
+    {
+        eventos[0] = proximoArriboA();
+        eventos[1] = proximoArriboB();
+        eventos[2] = proximoArriboC();
+        for(int i = 3; i<13; i++)
+        {
+            eventos[i] = 0;
+        }
+    }
     
     public void llegaArchivoA(int horaEvento)
     {
@@ -321,18 +342,31 @@ public class Eventos
      * Numeros aleatorios con distribucion f(x)=x/40 8<=x<=12
      * ESTE ES EL QUE ME  HACE FALTA VER COMO SE HACE RICARDO
      */
-    public double proximoArriboB(){
+    public double proximoArriboB()
+    {
+        double proximo = 0;
+        return proximo;
     }
 
     /**
-     * Numeros aleatorios con distibicion normal con media 5 y varianza 1 
+     * Numeros aleatorios con distibición normal con media 5 y varianza 1 
      */
-    public double proximoArriboC(){
+    public double proximoArriboC()
+    {
        double x, z, r1, r2;  
        r1 = m_random.nextDouble() ;
        r2 = m_random.nextDouble() ;
        z=(Math.sqrt(-2*Math.log(r1)))*Math.sin(2*Math.PI*r2);
        x=1*z+5; 
        return x;
+    }
+    
+    public static void main (String args [])
+    {
+        Eventos simulacion;
+        int numeroVeces;            // Número de veces que se va a correr la simulación.
+        double tiempoTotal;         // Tiempo total en segundos para correr cada vez la simulación.
+        boolean modoLento = false;  // Si desea ver la simulación correr en modo lento o no.
+        double tiempoToken;         // El tiempo durante el cuál a cada máquina se le asigna el token.
     }
 }
