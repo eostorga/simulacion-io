@@ -1,10 +1,15 @@
 package Simulacion;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 public class Eventos
 {
-    double reloj, tiempo, tiempoToken;
+    double reloj;
+    double tiempoTotalSimulacion;       // Tiempo total en segundos para correr cada vez la simulación.
+    double tiempo;
+    double tiempoToken;
+    int vecesSimulacion;                // Número de veces que se va a correr la simulación.
     int filaA;
     int filaB;
     int filaC;
@@ -29,15 +34,36 @@ public class Eventos
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
     Random m_random;
     
+    /* DEFINICIÓN DE LOS EVENTOS EN EL ARREGLO
+     * 
+     * [0] -> Llega Archivo A
+     */
+    
     public Eventos()
     {
         eventos = new double[13]; // Número total de eventos.
+        m_random = new Random();
         inicializarEventos();
     }
     
     public void setToken(double tiempoUsoToken)
     {
         tiempoToken = tiempoUsoToken;
+    }
+    
+    public void setTiempoSimulacion(double tiempoSimulacion)
+    {
+        tiempoTotalSimulacion = tiempoSimulacion;
+    }
+    
+    public void setVecesSimulacion(int veces)
+    {
+        vecesSimulacion = veces;
+    }
+    
+    public double getToken()
+    {
+        return tiempoToken;
     }
     
     public void inicializarEventos()
@@ -50,6 +76,40 @@ public class Eventos
             eventos[i] = 0;
         }
     }
+    
+    public void iniciarSimulacion()
+    {
+        int numeroEvento = 0;
+        
+        for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
+        {
+            while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
+            {
+                numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto.
+                
+                switch(numeroEvento)
+                {
+                    case 0: ;
+                        break;
+                }
+            }
+        }
+    }
+    
+    public int proximoEvento()
+    {
+        int menor = 999999; // Un número muy grande cualquiera.
+        for(int i = 0; i < eventos.length; i++)
+        {
+            if ( eventos[i] < menor)
+            {
+                menor = i;  // Devuelve el índice en el arreglo del evento.
+            }
+        }
+        return menor;
+    }
+    
+    /************************** EVENTOS *************************************/
     
     public void llegaArchivoA(int horaEvento)
     {
@@ -353,11 +413,11 @@ public class Eventos
      */
     public double proximoArriboC()
     {
-       double x, z, r1, r2;  
-       r1 = m_random.nextDouble() ;
-       r2 = m_random.nextDouble() ;
+       double x, z, r1, r2;
+       r1 = m_random.nextDouble();
+       r2 = m_random.nextDouble();
        z=(Math.sqrt(-2*Math.log(r1)))*Math.sin(2*Math.PI*r2);
-       x=1*z+5; 
+       x=1*z+5;
        return x;
     }
     
@@ -368,5 +428,14 @@ public class Eventos
         double tiempoTotal;         // Tiempo total en segundos para correr cada vez la simulación.
         boolean modoLento = false;  // Si desea ver la simulación correr en modo lento o no.
         double tiempoToken;         // El tiempo durante el cuál a cada máquina se le asigna el token.
+        
+        simulacion = new Eventos();
+        
+        String stringInput = JOptionPane.showInputDialog("Ingrese el tiempo de token");
+        int number = Integer.parseInt(stringInput);
+        
+        simulacion.setToken(number);
+        String mensaje = Double.toString(simulacion.getToken());
+        JOptionPane.showMessageDialog(null, mensaje);
     }
 }
