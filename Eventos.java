@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 
 public class Eventos
 {
-    double reloj;
+    double reloj = 0;
     double tiempoTotalSimulacion;       // Tiempo total en segundos para correr cada vez la simulación.
     double tiempo;
     double tiempoToken;
@@ -15,8 +15,6 @@ public class Eventos
     int filaC;
     int filaAntivirus;
     int filaRouter;
-    int prioridad;
-    int tamano;
     int duracionTotalRevision;
     int duracionTransmisionRouter;
     double tiempoTransferencia;
@@ -34,26 +32,25 @@ public class Eventos
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
     Random m_random;
     
-    /* DEFINICIÓN DE LOS EVENTOS EN EL ARREGLO
-     * 
-     * [0]  -> Llega de archivo a A
-     * [1]  -> Llega de archivo a B
-     * [2]  -> Llega de archivo a C
-     * [3]  -> A recibe token
-     * [4]  -> B recibe token
-     * [5]  -> C recibe token
-     * [6]  -> A termina de poner en la línea
-     * [7]  -> B termina de poner en la línea
-     * [8]  -> C termina de poner en la línea
-     * [9]  -> Llegada de archivo a antivirus
-     * [10] -> Se libera antivirus
-     * [11] -> Se libera línea 1
-     * [12] -> Se libera línea 2
-     */
-    
     public Eventos()
     {
         eventos = new double[13]; // Número total de eventos.
+        /* DEFINICIÓN DE LOS EVENTOS EN EL ARREGLO
+         * 
+         * [0]  -> Llega de archivo a A
+         * [1]  -> Llega de archivo a B
+         * [2]  -> Llega de archivo a C
+         * [3]  -> A recibe token
+         * [4]  -> B recibe token
+         * [5]  -> C recibe token
+         * [6]  -> A termina de poner en la línea
+         * [7]  -> B termina de poner en la línea
+         * [8]  -> C termina de poner en la línea
+         * [9]  -> Llegada de archivo a antivirus
+         * [10] -> Se libera antivirus
+         * [11] -> Se libera línea 1
+         * [12] -> Se libera línea 2
+        */
         m_random = new Random();
         inicializarEventos();
     }
@@ -75,12 +72,12 @@ public class Eventos
     
     public void inicializarEventos()
     {
-        eventos[0] = proximoArriboA();
-        eventos[1] = proximoArriboB();
-        eventos[2] = proximoArriboC();
+        eventos[0] = reloj + proximoArriboA();
+        eventos[1] = reloj + proximoArriboB();
+        eventos[2] = reloj + proximoArriboC();
         for(int i = 3; i<13; i++)
         {
-            eventos[i] = 99999; // Se inicializan en un número muy grande.
+            eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
         }
     }
     
@@ -92,34 +89,42 @@ public class Eventos
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
                 numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo).                
-                switch(numeroEvento)
+                if(numeroEvento != -1)              // Solo para asegurarse que haya algún evento.
                 {
-                    case 0: llegaArchivoA(eventos[0]);
-                            break;
-                    case 1: llegaArchivoB(eventos[1]);
-                            break;
-                    case 2: llegaArchivoC(eventos[2]);
-                            break;
-                    case 3: ARecibeToken(eventos[3]);
-                            break;
-                    case 4: BRecibeToken(eventos[4]);
-                            break;
-                    case 5: CRecibeToken(eventos[5]);
-                            break;
-                    case 6: ATerminaPonerLinea(eventos[6]);
-                            break;
-                    case 7: BTerminaPonerLinea(eventos[7]);
-                            break;
-                    case 8: CTerminaPonerLinea(eventos[8]);
-                            break;
-                    case 9: llegadaAntivirus(eventos[9], 1);    // Falta ver como mandarle el tamaño del archivo.
-                            break;
-                    case 10: liberaAntivirus(eventos[10], 1);   // Falta ver como mandarle el tamaño del archivo.
-                            break;
-                    case 11: liberaLinea1(eventos[11], 1);      // Falta ver como mandarle el tamaño del archivo.
-                            break;
-                    case 12: liberaLinea2(eventos[12], 1);      // Falta ver como mandarle el tamaño del archivo.
-                            break;
+                    switch(numeroEvento)
+                    {
+                        case 0: llegaArchivoA(eventos[0]);
+                                break;
+                        case 1: llegaArchivoB(eventos[1]);
+                                break;
+                        case 2: llegaArchivoC(eventos[2]);
+                                break;
+                        case 3: ARecibeToken(eventos[3]);
+                                break;
+                        case 4: BRecibeToken(eventos[4]);
+                                break;
+                        case 5: CRecibeToken(eventos[5]);
+                                break;
+                        case 6: ATerminaPonerLinea(eventos[6]);
+                                break;
+                        case 7: BTerminaPonerLinea(eventos[7]);
+                                break;
+                        case 8: CTerminaPonerLinea(eventos[8]);
+                                break;
+                        case 9: llegadaAntivirus(eventos[9], 1);    // Falta ver como mandarle el tamaño del archivo.
+                                break;
+                        case 10: liberaAntivirus(eventos[10], 1);   // Falta ver como mandarle el tamaño del archivo.
+                                break;
+                        case 11: liberaLinea1(eventos[11], 1);      // Falta ver como mandarle el tamaño del archivo.
+                                break;
+                        case 12: liberaLinea2(eventos[12], 1);      // Falta ver como mandarle el tamaño del archivo.
+                                break;
+                    }
+                }
+                else 
+                {
+                    // Ya no hay más eventos a realizarse, hay que terminar.
+                    reloj = tiempoTotalSimulacion;
                 }
             }
         }
@@ -127,15 +132,17 @@ public class Eventos
     
     public int proximoEvento()
     {
-        int menor = 999999; // Un número muy grande cualquiera.      
+        double menor = Double.MAX_VALUE;  // Un número muy grande cualquiera.
+        int indice = -1;                // Un índice no existente.
         for(int i = 0; i < eventos.length; i++)
         {
             if ( eventos[i] < menor)
             {
-                menor = i;  // Devuelve el índice en el arreglo del evento.
+                menor = eventos[i];  // Devuelve el índice en el arreglo del evento.
+                indice = i;
             }
         }
-        return menor;
+        return indice;
     }
     
     /************************** EVENTOS *************************************/
@@ -143,10 +150,9 @@ public class Eventos
     public void llegaArchivoA(double horaEvento)
     {
         reloj = horaEvento;
-        filaA += 1;
-        prioridad = 1;
-        tamano = 1;
-        
+        filaA++;
+        int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
+        int tamano = 1;         // Variable aleatoria discreta (1-64).        
         if(prioridad == 1)
         {
             filaAP1.add(tamano);
@@ -156,14 +162,47 @@ public class Eventos
         {
             filaAP2.add(tamano);
             // Ordenar arreglo por tamaño
-        }
-        
-        // Llega archivo a A = v.a.
+        }        
+        eventos[0] = reloj + proximoArriboA();// Próxima llegada de archivo a A.
     }
     
-    public void llegaArchivoB(double horaEvento){}
+    public void llegaArchivoB(double horaEvento)
+    {
+        reloj = horaEvento;
+        filaB++;
+        int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
+        int tamano = 1;         // Variable aleatoria discreta (1-64).        
+        if(prioridad == 1)
+        {
+            filaBP1.add(tamano);
+            // Ordenar arreglo por tamaño
+        }
+        else
+        {
+            filaBP2.add(tamano);
+            // Ordenar arreglo por tamaño
+        }        
+        eventos[1] = reloj + proximoArriboB();// Próxima llegada de archivo a B.
+    }
     
-    public void llegaArchivoC(double horaEvento){}
+    public void llegaArchivoC(double horaEvento)
+    {
+        reloj = horaEvento;
+        filaC++;
+        int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
+        int tamano = 1;          // Variable aleatoria uniforme discreta (1-64).        
+        if(prioridad == 1)
+        {
+            filaCP1.add(tamano);
+            // Ordenar arreglo por tamaño
+        }
+        else
+        {
+            filaCP2.add(tamano);
+            // Ordenar arreglo por tamaño
+        }        
+        eventos[2] = reloj + proximoArriboC();// Próxima llegada de archivo a C.
+    }
     
     public void ARecibeToken(double horaEvento)
     {
@@ -424,6 +463,52 @@ public class Eventos
     }
     public void liberaLinea2(double horaEvento, int tamanoArchv){}
 
+    /************* GENERACIÓN DE NÚMEROS ALEATORIOS ***************************/
+    
+    /**
+     * Asigna prioridad a un archivo.
+     * Variable aleatoria uniforme: X={1,2}
+     */
+    public int asignarPrioridad()
+    {
+        int prioridad = 0;
+        int i = m_random.nextInt(10); // Valor entre 0 (incluido) y 10 (excluido).
+        if(i < 5)   // 0 <= i < 5
+        {
+            prioridad = 1;
+        }
+        else        // 5 <= i < 10
+        {
+            prioridad = 2;
+        }
+        return prioridad;
+    }
+    
+    /**
+     * Asigna tamaño a un archivo.
+     * Variable aleatoria uniforme: X={1,2,3,...,64}
+     */
+    public int asignarTamano()
+    {
+        int tamano= 0;
+        int i = m_random.nextInt(1000000); // Valor entre 0 (incluido) y 1000000 (excluido).
+        // 0 <= i < 15624
+        if(i < 15625){ tamano = 1; }
+        // 15625 <= i < 31250
+        if( i >= 15625 && i < 31250){ tamano = 2; }
+        // 31250 <= i < 46875
+        if( i >= 31250 && i < 46875){ tamano = 3; }
+        if( i >= 46875 && i < 62500){ tamano = 4; }
+        if( i >= 62500 && i < 78125){ tamano = 5; }
+        if( i >= 78125 && i < 93750){ tamano = 6; }
+        if( i >= 93750 && i < 109375){tamano = 7; }
+        if( i >= 109375 && i < 125000){ tamano = 8;}
+        if( i >= 125000 && i < 140625){ tamano = 9;}
+        if( i >= 140625 && i < 156250){ tamano = 10;}
+        /*** FALTA... Y UN MONTÓN...***/
+        return tamano;
+    }
+    
     /**
      * Numeros aleatorios con distribucion exponencial con media de 5 segundos
      */
@@ -435,7 +520,6 @@ public class Eventos
         x = ((-Math.log(1-r))/lambda);
         return x;
     }
-
 
     /**
      * Numeros aleatorios con distribucion f(x)=x/40 8<=x<=12
