@@ -36,7 +36,19 @@ public class Eventos
     
     /* DEFINICIÓN DE LOS EVENTOS EN EL ARREGLO
      * 
-     * [0] -> Llega Archivo A
+     * [0]  -> Llega de archivo a A
+     * [1]  -> Llega de archivo a B
+     * [2]  -> Llega de archivo a C
+     * [3]  -> A recibe token
+     * [4]  -> B recibe token
+     * [5]  -> C recibe token
+     * [6]  -> A termina de poner en la línea
+     * [7]  -> B termina de poner en la línea
+     * [8]  -> C termina de poner en la línea
+     * [9]  -> Llegada de archivo a antivirus
+     * [10] -> Se libera antivirus
+     * [11] -> Se libera línea 1
+     * [12] -> Se libera línea 2
      */
     
     public Eventos()
@@ -61,11 +73,6 @@ public class Eventos
         vecesSimulacion = veces;
     }
     
-    public double getToken()
-    {
-        return tiempoToken;
-    }
-    
     public void inicializarEventos()
     {
         eventos[0] = proximoArriboA();
@@ -73,24 +80,46 @@ public class Eventos
         eventos[2] = proximoArriboC();
         for(int i = 3; i<13; i++)
         {
-            eventos[i] = 0;
+            eventos[i] = 99999; // Se inicializan en un número muy grande.
         }
     }
     
     public void iniciarSimulacion()
     {
-        int numeroEvento = 0;
-        
+        int numeroEvento;
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
-                numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto.
-                
+                numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo).                
                 switch(numeroEvento)
                 {
-                    case 0: ;
-                        break;
+                    case 0: llegaArchivoA(eventos[0]);
+                            break;
+                    case 1: llegaArchivoB(eventos[1]);
+                            break;
+                    case 2: llegaArchivoC(eventos[2]);
+                            break;
+                    case 3: ARecibeToken(eventos[3]);
+                            break;
+                    case 4: BRecibeToken(eventos[4]);
+                            break;
+                    case 5: CRecibeToken(eventos[5]);
+                            break;
+                    case 6: ATerminaPonerLinea(eventos[6]);
+                            break;
+                    case 7: BTerminaPonerLinea(eventos[7]);
+                            break;
+                    case 8: CTerminaPonerLinea(eventos[8]);
+                            break;
+                    case 9: llegadaAntivirus(eventos[9], 1);    // Falta ver como mandarle el tamaño del archivo.
+                            break;
+                    case 10: liberaAntivirus(eventos[10], 1);   // Falta ver como mandarle el tamaño del archivo.
+                            break;
+                    case 11: liberaLinea1(eventos[11], 1);      // Falta ver como mandarle el tamaño del archivo.
+                            break;
+                    case 12: liberaLinea2(eventos[12], 1);      // Falta ver como mandarle el tamaño del archivo.
+                            break;
                 }
             }
         }
@@ -98,7 +127,7 @@ public class Eventos
     
     public int proximoEvento()
     {
-        int menor = 999999; // Un número muy grande cualquiera.
+        int menor = 999999; // Un número muy grande cualquiera.      
         for(int i = 0; i < eventos.length; i++)
         {
             if ( eventos[i] < menor)
@@ -111,7 +140,7 @@ public class Eventos
     
     /************************** EVENTOS *************************************/
     
-    public void llegaArchivoA(int horaEvento)
+    public void llegaArchivoA(double horaEvento)
     {
         reloj = horaEvento;
         filaA += 1;
@@ -132,7 +161,11 @@ public class Eventos
         // Llega archivo a A = v.a.
     }
     
-    public void ARecibeToken(int horaEvento)
+    public void llegaArchivoB(double horaEvento){}
+    
+    public void llegaArchivoC(double horaEvento){}
+    
+    public void ARecibeToken(double horaEvento)
     {
         reloj = horaEvento;
         tiempo = tiempoToken;
@@ -204,7 +237,10 @@ public class Eventos
         // A recibe token = infinito;
     }
     
-    public void ATerminaPonerLinea(int horaEvento)
+    public void BRecibeToken(double horaEvento){}
+    public void CRecibeToken(double horaEvento){}
+    
+    public void ATerminaPonerLinea(double horaEvento)
     {
         reloj = horaEvento;
         /* Llegar a antivirus = reloj + 1; */
@@ -283,8 +319,10 @@ public class Eventos
             /* A termina poner en línea = infinito; */
         }
     }
+    public void BTerminaPonerLinea(double horaEvento){}
+    public void CTerminaPonerLinea(double horaEvento){}
     
-    public void llegadaAntivirus(int horaEvento, int tamanoArchv)
+    public void llegadaAntivirus(double horaEvento, int tamanoArchv)
     {
         reloj = horaEvento;
         
@@ -303,7 +341,7 @@ public class Eventos
         /* Llegada antivirus = infinito */
     }
     
-    public void liberaAntivirus(int horaEvento, int tamanoArchv)
+    public void liberaAntivirus(double horaEvento, int tamanoArchv)
     {
         reloj = horaEvento;
         
@@ -367,7 +405,7 @@ public class Eventos
         }        
     }
     
-    public void liberaLinea1(int horaEvento, int tamanoArchv)
+    public void liberaLinea1(double horaEvento, int tamanoArchv)
     {
         reloj = horaEvento;
         
@@ -384,6 +422,7 @@ public class Eventos
             linea1 = true;
         }
     }
+    public void liberaLinea2(double horaEvento, int tamanoArchv){}
 
     /**
      * Numeros aleatorios con distribucion exponencial con media de 5 segundos
@@ -435,7 +474,7 @@ public class Eventos
         int number = Integer.parseInt(stringInput);
         
         simulacion.setToken(number);
-        String mensaje = Double.toString(simulacion.getToken());
+        String mensaje = Double.toString(simulacion.tiempoToken);
         JOptionPane.showMessageDialog(null, mensaje);
     }
 }
