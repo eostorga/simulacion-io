@@ -21,6 +21,9 @@ public class Eventos
     int tamArchvL2;                     //
     int archivosEnviados;               //
     int archivosNoEnviados;             //
+    int enviadosL1;                     //
+    int enviadosL2;                     //
+    int tieneToken;                     //
     double duracionTotalRevision;       //
     double duracionTransmisionL1;       //
     double duracionTransmisionL2;       //
@@ -124,9 +127,9 @@ public class Eventos
                                 break;
                         case 10: liberaAntivirus(eventos[10]);
                                 break;
-                        case 11: liberaLinea1(eventos[11]);      // Falta ver como mandarle el tamaño del archivo.
+                        case 11: liberaLinea1(eventos[11]);
                                 break;
-                        case 12: liberaLinea2(eventos[12]);      // Falta ver como mandarle el tamaño del archivo.
+                        case 12: liberaLinea2(eventos[12]);
                                 break;
                     }
                 }
@@ -216,6 +219,7 @@ public class Eventos
     public void ARecibeToken(double horaEvento)
     {
         reloj = horaEvento;
+        tieneToken = 1; // A tiene token.
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -317,6 +321,7 @@ public class Eventos
     public void BRecibeToken(double horaEvento)
     {
         reloj = horaEvento;
+        tieneToken = 2; // B tiene token.
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -417,6 +422,7 @@ public class Eventos
     public void CRecibeToken(double horaEvento)
     {
         reloj = horaEvento;
+        tieneToken = 3; // C tiene token.
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -932,6 +938,7 @@ public class Eventos
                 int linea = escogerLinea(); // Escoge cuál línea agarra
                 if(linea == 1)
                 {
+                    enviadosL1++;
                     linea1 = false;
                     duracionTransmisionL1 = tamArchvLibera / 64;
                     tamArchvL1 = tamArchvLibera;
@@ -940,6 +947,7 @@ public class Eventos
                 }
                 else
                 {
+                    enviadosL2++;
                     linea2 = false;
                     duracionTransmisionL2 = tamArchvLibera / 64;
                     tamArchvL2 = tamArchvLibera;
@@ -951,6 +959,7 @@ public class Eventos
             {
                 if(linea1)
                 {
+                    enviadosL1++;
                     linea1 = false;
                     duracionTransmisionL1 = tamArchvLibera / 64;
                     tamArchvL1 = tamArchvLibera;
@@ -961,6 +970,7 @@ public class Eventos
                 {
                     if(linea2)
                     {
+                        enviadosL2++;
                         linea2 = false;
                         duracionTransmisionL2 = tamArchvLibera / 64;
                         tamArchvL2 = tamArchvLibera;
@@ -1026,6 +1036,7 @@ public class Eventos
         
         if(filaRouter != 0)
         {
+            enviadosL1++;
             linea1 = false;
             tamArchvL1 = colaRouter.get(0);
             filaRouter--;
@@ -1047,6 +1058,7 @@ public class Eventos
         
         if(filaRouter != 0)
         {
+            enviadosL2++;
             linea2 = false;
             tamArchvL2 = colaRouter.get(0);
             filaRouter--;
@@ -1057,8 +1069,8 @@ public class Eventos
         }
         else
         {
-            linea1 = true;
-            /* Se libera línea 1 = infinito */
+            linea2 = true;
+            /* Se libera línea 2 = infinito */
             eventos[12] = Double.MAX_VALUE;
         }
     }
@@ -1271,6 +1283,8 @@ public class Eventos
         System.out.println("Enviados: "+simulacion.archivosEnviados);
         System.out.println("No enviados: "+simulacion.archivosNoEnviados);
         System.out.println("Fila Router: "+simulacion.filaRouter);
+        System.out.println("Enviados L1: "+simulacion.enviadosL1);
+        System.out.println("Enviados L2: "+simulacion.enviadosL2);
         System.out.println("Reloj: "+simulacion.reloj);
     }
 }
