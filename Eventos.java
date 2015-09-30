@@ -10,6 +10,7 @@ public class Eventos
     double tiempo;                      //
     double tiempoToken;                 //
     int vecesSimulacion;                // Número de veces que se va a correr la simulación.
+    int numeroEvento;                   //
     int filaA;                          //
     int filaB;                          //
     int filaC;                          //
@@ -95,7 +96,6 @@ public class Eventos
     
     public void iniciarSimulacion()
     {
-        int numeroEvento;
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
