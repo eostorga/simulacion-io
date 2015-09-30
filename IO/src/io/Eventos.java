@@ -1161,6 +1161,7 @@ public class Eventos
     
     public static void main (String args [])
     {
+        
         Eventos simulacion;
         int numeroVeces;            // Número de veces que se va a correr la simulación.
         double tiempoTotal;         // Tiempo total en segundos para correr cada vez la simulación.
