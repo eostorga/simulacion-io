@@ -72,10 +72,14 @@ public class Eventos
     
     public void inicializarEventos()
     {
+        /*eventos[0] = Double.MAX_VALUE;
+        eventos[1] = Double.MAX_VALUE;
+        eventos[2] = Double.MAX_VALUE;*/
         eventos[0] = reloj + proximoArriboA();
         eventos[1] = reloj + proximoArriboB();
         eventos[2] = reloj + proximoArriboC();
-        for(int i = 3; i<13; i++)
+        eventos[3] = reloj + 5;
+        for(int i = 4; i<13; i++)
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
         }
@@ -88,7 +92,7 @@ public class Eventos
         {
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
-                numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo).                
+                numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo). 
                 if(numeroEvento != -1)              // Solo para asegurarse que haya algún evento.
                 {
                     switch(numeroEvento)
@@ -99,11 +103,11 @@ public class Eventos
                                 break;
                         case 2: llegaArchivoC(eventos[2]);
                                 break;
-                        case 3: ARecibeToken(eventos[3]);
+                        case 3: ARecibeToken(eventos[3]); System.out.println("Token A");
                                 break;
-                        case 4: BRecibeToken(eventos[4]);
+                        case 4: BRecibeToken(eventos[4]); System.out.println("Token B");
                                 break;
-                        case 5: CRecibeToken(eventos[5]);
+                        case 5: CRecibeToken(eventos[5]); System.out.println("Token C");
                                 break;
                         case 6: ATerminaPonerLinea(eventos[6]);
                                 break;
@@ -152,7 +156,7 @@ public class Eventos
         reloj = horaEvento;
         filaA++;
         int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
-        int tamano = 1;         // Variable aleatoria discreta (1-64).        
+        int tamano = asignarTamano();         // Variable aleatoria discreta (1-64).        
         if(prioridad == 1)
         {
             filaAP1.add(tamano);
@@ -171,7 +175,7 @@ public class Eventos
         reloj = horaEvento;
         filaB++;
         int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
-        int tamano = 1;         // Variable aleatoria discreta (1-64).        
+        int tamano = asignarTamano();         // Variable aleatoria discreta (1-64).        
         if(prioridad == 1)
         {
             filaBP1.add(tamano);
@@ -190,7 +194,7 @@ public class Eventos
         reloj = horaEvento;
         filaC++;
         int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
-        int tamano = 1;          // Variable aleatoria uniforme discreta (1-64).        
+        int tamano = asignarTamano();          // Variable aleatoria uniforme discreta (1-64).        
         if(prioridad == 1)
         {
             filaCP1.add(tamano);
@@ -215,74 +219,302 @@ public class Eventos
         {
             if(filaAP1.size() > 0)
             {
-                while(i <= filaAP1.size() && tiempoTransferencia == 0)
+                do
                 {    
-                    tiempoTransferencia = filaAP1.get(i) * 0.5;
+                    tiempoTransferencia = filaAP1.get(i) * 0.25;
                     i++;
+                }while(i < filaAP1.size() && tiempoTransferencia > tiempo);
+                
+                if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                {
+                    filaA -= 1;
+                    filaAP1.remove(i-1);
+                    /* A termina poner en línea */
+                    eventos[6] = reloj + tiempoTransferencia;
+                    //tiempo = tiempo - tiempoTransferencia;
                 }
                 
-                if(tiempoTransferencia != 0) // Si sale del ciclo porque va a enviar un archivo
-                {
-                    filaA --;
-                    filaAP1.remove(i-1);
-                    /* A termina poner en línea = reloj + tiempoTransferencia; */
-                }
-                else
+                if(i >= filaAP1.size()) // Se acabó fila de prioridad 1
                 {
                     i = 0;
-                    while(i <= filaAP2.size() && tiempoTransferencia == 0)
-                    {    
-                        tiempoTransferencia = filaAP2.get(i) * 0.5;
-                        i++;
-                    }
-
-                    if(tiempoTransferencia != 0) // Si sale del ciclo porque va a enviar un archivo
+                    if(filaAP2.size() > 0)
                     {
-                        filaA --;
-                        filaAP2.remove(i-1);
-                        /* A termina poner en línea = reloj + tiempoTransferencia; */
+                        do
+                        {    
+                            tiempoTransferencia = filaAP2.get(i) * 0.25;
+                            i++;
+                        }while(i < filaAP2.size() && tiempoTransferencia > tiempo);
+
+                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        {
+                            filaA -= 1;
+                            filaAP2.remove(i-1);
+                            /* A termina poner en línea */
+                            eventos[6] = reloj + tiempoTransferencia;
+                            //tiempo = tiempo - tiempoTransferencia;
+                        }
+
+                        if(i >= filaAP2.size())
+                        {
+                            /* B recibe token */
+                            eventos[4] = reloj;
+                        }
                     }
                     else
                     {
-                        /* B recibe token = reloj; */
+                        /* B recibe token */
+                        eventos[4] = reloj;
                     }
                 }
             }
             else
             {
-                while(i <= filaAP2.size() && tiempoTransferencia == 0)
-                {    
-                    tiempoTransferencia = filaAP2.get(i) * 0.5;
-                    i++;
-                }
-
-                if(tiempoTransferencia != 0) // Si sale del ciclo porque va a enviar un archivo
+                i = 0;
+                if(filaAP2.size() > 0)
                 {
-                    filaA --;
-                    filaAP2.remove(i-1);
-                    /* A termina poner en línea = reloj + tiempoTransferencia; */
+                    do
+                    {    
+                        tiempoTransferencia = filaAP2.get(i) * 0.25;
+                        i++;
+                    }while(i < filaAP2.size() && tiempoTransferencia > tiempo);
+
+                    if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                    {
+                        filaA -= 1;
+                        filaAP2.remove(i-1);
+                        /* A termina poner en línea */
+                        eventos[6] = reloj + tiempoTransferencia;
+                        //tiempo = tiempo - tiempoTransferencia;
+                    }
+                    if(i >= filaAP2.size())
+                    {
+                        /* B recibe token */
+                        eventos[4] = reloj;
+                    }
                 }
                 else
                 {
-                    /* B recibe token = reloj; */
+                    /* B recibe token */
+                    eventos[4] = reloj;
                 }
             }
         }
         else
         {
-            /* B recibe token = reloj; */
+            /* B recibe token */
+            eventos[4] = reloj;
         }
         
         // A recibe token = infinito;
+        eventos[3] = Double.MAX_VALUE;
     }
     
-    public void BRecibeToken(double horaEvento){}
-    public void CRecibeToken(double horaEvento){}
+    public void BRecibeToken(double horaEvento)
+    {
+        reloj = horaEvento;
+        tiempo = tiempoToken;
+        tiempoTransferencia = 0;
+        int i = 0;
+        
+        if(filaB != 0)
+        {
+            if(filaBP1.size() > 0)
+            {
+                do
+                {    
+                    tiempoTransferencia = filaBP1.get(i) * 0.25;
+                    i++;
+                }while(i < filaBP1.size() && tiempoTransferencia > tiempo);
+                
+                if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                {
+                    filaB -= 1;
+                    filaBP1.remove(i-1);
+                    /* B termina poner en línea */
+                    eventos[7] = reloj + tiempoTransferencia;
+                    //tiempo = tiempo - tiempoTransferencia;
+                }
+                
+                if(i >= filaBP1.size()) // Se acabó fila de prioridad 1
+                {
+                    i = 0;
+                    if(filaBP2.size() > 0)
+                    {
+                        do
+                        {    
+                            tiempoTransferencia = filaBP2.get(i) * 0.25;
+                            i++;
+                        }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
+
+                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        {
+                            filaB -= 1;
+                            filaBP2.remove(i-1);
+                            /* B termina poner en línea */
+                            eventos[7] = reloj + tiempoTransferencia;
+                            //tiempo = tiempo - tiempoTransferencia;
+                        }
+                        if(i >= filaBP2.size())
+                        {
+                            /* C recibe token */
+                            eventos[5] = reloj;
+                        }
+                    }
+                    else
+                    {
+                        /* C recibe token */
+                        eventos[5] = reloj;
+                    }
+                }
+            }
+            else
+            {
+                i = 0;
+                if(filaBP2.size() > 0)
+                {
+                    do
+                    {    
+                        tiempoTransferencia = filaBP2.get(i) * 0.25;
+                        i++;
+                    }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
+
+                    if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                    {
+                        filaB -= 1;
+                        filaBP2.remove(i-1);
+                        /* B termina poner en línea */
+                        eventos[7] = reloj + tiempoTransferencia;
+                        //tiempo = tiempo - tiempoTransferencia;
+                    }
+                    if(i >= filaBP2.size())
+                    {
+                        /* C recibe token */
+                        eventos[5] = reloj;
+                    }
+                }
+                else
+                {
+                    /* C recibe token */
+                    eventos[5] = reloj;
+                }
+            }
+        }
+        else
+        {
+            /* C recibe token */
+            eventos[5] = reloj;
+        }
+        
+        // B recibe token = infinito;
+        eventos[4] = Double.MAX_VALUE;
+    }
+    
+    public void CRecibeToken(double horaEvento)
+    {
+        reloj = horaEvento;
+        tiempo = tiempoToken;
+        tiempoTransferencia = 0;
+        int i = 0;
+        
+        if(filaC != 0)
+        {
+            if(filaCP1.size() > 0)
+            {
+                do
+                {    
+                    tiempoTransferencia = filaCP1.get(i) * 0.25;
+                    i++;
+                }while(i < filaCP1.size() && tiempoTransferencia > tiempo);
+                
+                if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                {
+                    filaC -= 1;
+                    filaCP1.remove(i-1);
+                    /* C termina poner en línea */
+                    eventos[8] = reloj + tiempoTransferencia;
+                    //tiempo = tiempo - tiempoTransferencia;
+                }
+                
+                if(i >= filaCP1.size()) // Se acabó fila de prioridad 1
+                {
+                    i = 0; 
+                    if(filaCP2.size() > 0)
+                    {                   
+                        do
+                        {    
+                            tiempoTransferencia = filaCP2.get(i) * 0.25;
+                            i++;
+                        }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
+
+                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        {
+                            filaC -= 1;
+                            filaCP2.remove(i-1);
+                            /* C termina poner en línea */
+                            eventos[8] = reloj + tiempoTransferencia;
+                            //tiempo = tiempo - tiempoTransferencia;
+                        }
+                        if(i >= filaCP2.size())
+                        {
+                            /* A recibe token */
+                            eventos[3] = reloj;
+                        }
+                    }
+                    else
+                    {
+                        /* A recibe token */
+                        eventos[3] = reloj;
+                    }
+                }
+            }
+            else
+            {
+                i = 0;
+                if(filaCP2.size() > 0)
+                {
+                    do
+                    {    
+                        tiempoTransferencia = filaCP2.get(i) * 0.25;
+                        i++;
+                    }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
+
+                    if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                    {
+                        filaC -= 1;
+                        filaCP2.remove(i-1);
+                        /* C termina poner en línea */
+                        eventos[8] = reloj + tiempoTransferencia;
+                        //tiempo = tiempo - tiempoTransferencia;
+                    }
+                    if(i >= filaCP2.size())
+                    {
+                        /* A recibe token */
+                        eventos[3] = reloj;
+                    }
+                }
+                else
+                {
+                    /* A recibe token */
+                    eventos[3] = reloj;
+                }
+            }
+        }
+        else
+        {
+            /* A recibe token */
+            eventos[3] = reloj;
+        }
+        
+        // C recibe token = infinito;
+        eventos[5] = Double.MAX_VALUE;
+    }
     
     public void ATerminaPonerLinea(double horaEvento)
     {
         reloj = horaEvento;
+        tiempo = tiempo - tiempoTransferencia;
         /* Llegar a antivirus = reloj + 1; */
+        eventos[9] = reloj + 1;
         int i = 0;
         
         if(tiempo != 0)
@@ -291,75 +523,341 @@ public class Eventos
             {
                 if(filaAP1.size() > 0)
                 {
-                    while(i <= filaAP1.size() && tiempoTransferencia == 0)
+                    do
                     {    
-                        tiempoTransferencia = filaAP1.get(i) * 0.5;
+                        tiempoTransferencia = filaAP1.get(i) * 0.25;
                         i++;
-                    }
+                    }while(i < filaAP1.size() && tiempoTransferencia > tiempo);
 
-                    if(tiempoTransferencia != 0) // Si sale del ciclo porque va a enviar un archivo
+                    if(tiempoTransferencia <= tiempo)
                     {
-                        filaA --;
+                        filaA -= 1;
                         filaAP1.remove(i-1);
-                        /* A termina poner en línea = reloj + tiempoTransferencia; */
+                        /* A termina poner en línea */
+                        eventos[6] = reloj + tiempoTransferencia;
+                        tiempo = tiempo - tiempoTransferencia;
                     }
-                    else
+                    
+                    if(i >= filaAP1.size()) // Se acabó fila de prioridad 1
                     {
                         i = 0;
-                        while(i <= filaAP2.size() && tiempoTransferencia == 0)
-                        {    
-                            tiempoTransferencia = filaAP2.get(i) * 0.5;
-                            i++;
-                        }
-
-                        if(tiempoTransferencia != 0) // Si sale del ciclo porque va a enviar un archivo
+                        if(filaAP2.size() > 0)
                         {
-                            filaA --;
-                            filaAP2.remove(i-1);
-                            /* A termina poner en línea = reloj + tiempoTransferencia; */
+                            do
+                            {    
+                                tiempoTransferencia = filaAP2.get(i) * 0.25;
+                                i++;
+                            }while(i < filaAP2.size() && tiempoTransferencia > tiempo);
+
+                            if(tiempoTransferencia <= tiempo)
+                            {
+                                filaA -= 1;
+                                filaAP2.remove(i-1);
+                                /* A termina poner en línea */
+                                eventos[6] = reloj + tiempoTransferencia;
+                                tiempo = tiempo - tiempoTransferencia;
+                            }
+                            if(i >= filaAP2.size()) // Se acabó fila de prioridad 2
+                            {
+                                /* B recibe token */
+                                eventos[4] = reloj;
+                                /* A termina poner en línea = infinito; */
+                                eventos[6] = Double.MAX_VALUE;
+                            }
                         }
                         else
                         {
-                            /* B recibe token = reloj; */
+                            /* B recibe token */
+                            eventos[4] = reloj;
                             /* A termina poner en línea = infinito; */
+                            eventos[6] = Double.MAX_VALUE;
                         }
                     }
                 }
                 else
                 {
-                    while(i <= filaAP2.size() && tiempoTransferencia == 0)
-                    {    
-                        tiempoTransferencia = filaAP2.get(i) * 0.5;
-                        i++;
-                    }
-
-                    if(tiempoTransferencia != 0) // Si sale del ciclo porque va a enviar un archivo
+                    if(filaAP2.size() > 0)
                     {
-                        filaA --;
-                        filaAP2.remove(i-1);
-                        /* A termina poner en línea = reloj + tiempoTransferencia; */
+                        do
+                        {    
+                            tiempoTransferencia = filaAP2.get(i) * 0.25;
+                            i++;
+                        }while(i < filaAP2.size() && tiempoTransferencia > tiempo);
+
+                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        {
+                            filaA -= 1;
+                            filaAP2.remove(i-1);
+                            /* A termina poner en línea */
+                            eventos[6] = reloj + tiempoTransferencia;
+                            tiempo = tiempo - tiempoTransferencia;
+                        }
+                        if(i >= filaAP2.size()) // Se acabó fila de prioridad 2
+                        {
+                            /* B recibe token */
+                            eventos[4] = reloj;
+                            /* A termina poner en línea = infinito; */
+                            eventos[6] = Double.MAX_VALUE;
+                        }
                     }
                     else
                     {
-                        /* B recibe token = reloj; */
+                        /* B recibe token */
+                        eventos[4] = reloj;
                         /* A termina poner en línea = infinito; */
+                        eventos[6] = Double.MAX_VALUE;
                     }
                 }
             }
             else
             {
-                /* B recibe token = reloj; */
+                /* B recibe token */
+                eventos[4] = reloj;
                 /* A termina poner en línea = infinito; */
+                eventos[6] = Double.MAX_VALUE;
             }
         }
         else
         {
-            /* B recibe token = reloj; */
+            /* B recibe token */
+            eventos[4] = reloj;
             /* A termina poner en línea = infinito; */
+            eventos[6] = Double.MAX_VALUE;
         }
     }
-    public void BTerminaPonerLinea(double horaEvento){}
-    public void CTerminaPonerLinea(double horaEvento){}
+    public void BTerminaPonerLinea(double horaEvento)
+    {
+        reloj = horaEvento;
+        tiempo = tiempo - tiempoTransferencia;
+        /* Llegar a antivirus = reloj + 1; */
+        eventos[9] = reloj + 1;
+        int i = 0;
+        
+        if(tiempo != 0)
+        {
+            if(filaB != 0)
+            {
+                if(filaBP1.size() > 0)
+                {
+                    do
+                    {    
+                        tiempoTransferencia = filaBP1.get(i) * 0.25;
+                        i++;
+                    }while(i < filaBP1.size() && tiempoTransferencia > tiempo);
+
+                    if(tiempoTransferencia <= tiempo)
+                    {
+                        filaB -= 1;
+                        filaBP1.remove(i-1);
+                        /* B termina poner en línea */
+                        eventos[7] = reloj + tiempoTransferencia;
+                        tiempo = tiempo - tiempoTransferencia;
+                    }
+                    
+                    if(i >= filaBP1.size()) // Se acabó fila de prioridad 1
+                    {
+                        i = 0;
+                        if(filaBP2.size() > 0)
+                        {
+                            do
+                            {    
+                                tiempoTransferencia = filaBP2.get(i) * 0.25;
+                                i++;
+                            }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
+
+                            if(tiempoTransferencia <= tiempo)
+                            {
+                                filaB -= 1;
+                                filaBP2.remove(i-1);
+                                /* B termina poner en línea */
+                                eventos[7] = reloj + tiempoTransferencia;
+                                tiempo = tiempo - tiempoTransferencia;
+                            }
+                            if(i >= filaBP2.size()) // Se acabó fila de prioridad 2
+                            {
+                                /* C recibe token */
+                                eventos[5] = reloj;
+                                /* B termina poner en línea = infinito; */
+                                eventos[7] = Double.MAX_VALUE;
+                            }
+                        }
+                        else
+                        {
+                            /* C recibe token */
+                            eventos[5] = reloj;
+                            /* B termina poner en línea = infinito; */
+                            eventos[7] = Double.MAX_VALUE;
+                        }
+                    }
+                }
+                else
+                {
+                    if(filaBP2.size() > 0)
+                    {
+                        do
+                        {    
+                            tiempoTransferencia = filaBP2.get(i) * 0.25;
+                            i++;
+                        }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
+
+                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        {
+                            filaB -= 1;
+                            filaBP2.remove(i-1);
+                            /* B termina poner en línea */
+                            eventos[7] = reloj + tiempoTransferencia;
+                            tiempo = tiempo - tiempoTransferencia;
+                        }
+                        if(i >= filaBP2.size()) // Se acabó fila de prioridad 2
+                        {
+                            /* C recibe token */
+                            eventos[5] = reloj;
+                            /* B termina poner en línea = infinito; */
+                            eventos[7] = Double.MAX_VALUE;
+                        }
+                    }
+                    else
+                    {
+                        /* C recibe token */
+                        eventos[5] = reloj;
+                        /* B termina poner en línea = infinito; */
+                        eventos[7] = Double.MAX_VALUE;
+                    }
+                }
+            }
+            else
+            {
+                /* C recibe token */
+                eventos[5] = reloj;
+                /* B termina poner en línea = infinito; */
+                eventos[7] = Double.MAX_VALUE;
+            }
+        }
+        else
+        {
+            /* C recibe token */
+            eventos[5] = reloj;
+            /* B termina poner en línea = infinito; */
+            eventos[7] = Double.MAX_VALUE;
+        }
+    }
+    
+    public void CTerminaPonerLinea(double horaEvento)
+    {
+        reloj = horaEvento;
+        tiempo = tiempo - tiempoTransferencia;
+        /* Llegar a antivirus = reloj + 1; */
+        eventos[9] = reloj + 1;
+        int i = 0;
+        
+        if(tiempo != 0)
+        {
+            if(filaC != 0)
+            {
+                if(filaCP1.size() > 0)
+                {
+                    do
+                    {    
+                        tiempoTransferencia = filaCP1.get(i) * 0.25;
+                        i++;
+                    }while(i < filaCP1.size() && tiempoTransferencia > tiempo);
+
+                    if(tiempoTransferencia <= tiempo)
+                    {
+                        filaC -= 1;
+                        filaCP1.remove(i-1);
+                        /* C termina poner en línea */
+                        eventos[8] = reloj + tiempoTransferencia;
+                        tiempo = tiempo - tiempoTransferencia;
+                    }
+                    
+                    if(i >= filaCP1.size()) // Se acabó fila de prioridad 1
+                    {
+                        i = 0;
+                        if(filaCP2.size() > 0)
+                        { 
+                            do
+                            {    
+                                tiempoTransferencia = filaCP2.get(i) * 0.25;
+                                i++;
+                            }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
+
+                            if(tiempoTransferencia <= tiempo)
+                            {
+                                filaC -= 1;
+                                filaCP2.remove(i-1);
+                                /* C termina poner en línea */
+                                eventos[8] = reloj + tiempoTransferencia;
+                                tiempo = tiempo - tiempoTransferencia;
+                            }
+                            if(i >= filaCP2.size()) // Se acabó fila de prioridad 2
+                            {
+                                /* A recibe token */
+                                eventos[3] = reloj;
+                                /* C termina poner en línea = infinito; */
+                                eventos[8] = Double.MAX_VALUE;
+                            }
+                        }
+                        else
+                        {
+                            /* A recibe token */
+                            eventos[3] = reloj;
+                            /* C termina poner en línea = infinito; */
+                            eventos[8] = Double.MAX_VALUE;
+                        }
+                    }
+                }
+                else
+                {
+                    if(filaCP2.size() > 0)
+                    { 
+                        do
+                        {    
+                            tiempoTransferencia = filaCP2.get(i) * 0.25;
+                            i++;
+                        }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
+
+                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        {
+                            filaC -= 1;
+                            filaCP2.remove(i-1);
+                            /* C termina poner en línea */
+                            eventos[8] = reloj + tiempoTransferencia;
+                            tiempo = tiempo - tiempoTransferencia;
+                        }
+                        if(i >= filaCP2.size()) // Se acabó fila de prioridad 2
+                        {
+                            /* A recibe token */
+                            eventos[3] = reloj;
+                            /* C termina poner en línea = infinito; */
+                            eventos[8] = Double.MAX_VALUE;
+                        }
+                    }
+                    else
+                    {
+                        /* A recibe token */
+                        eventos[3] = reloj;
+                        /* C termina poner en línea = infinito; */
+                        eventos[8] = Double.MAX_VALUE;
+                    }
+                }
+            }
+            else
+            {
+                /* A recibe token */
+                eventos[3] = reloj;
+                /* C termina poner en línea = infinito; */
+                eventos[8] = Double.MAX_VALUE;
+            }
+        }
+        else
+        {
+            /* A recibe token */
+            eventos[3] = reloj;
+            /* C termina poner en línea = infinito; */
+            eventos[8] = Double.MAX_VALUE;
+        }
+    }
     
     public void llegadaAntivirus(double horaEvento, int tamanoArchv)
     {
@@ -378,6 +876,7 @@ public class Eventos
             colaAntivirus.add(tamanoArchv);
         }        
         /* Llegada antivirus = infinito */
+        eventos[9] = Double.MAX_VALUE;
     }
     
     public void liberaAntivirus(double horaEvento, int tamanoArchv)
@@ -580,7 +1079,8 @@ public class Eventos
      */
     public double proximoArriboB()
     {
-        double proximo = 0;
+        int x = m_random.nextInt(13);
+        double proximo = ((double)x)/40;
         return proximo;
     }
 
@@ -606,12 +1106,25 @@ public class Eventos
         double tiempoToken;         // El tiempo durante el cuál a cada máquina se le asigna el token.
         
         simulacion = new Eventos();
+        String stringInput;
         
-        String stringInput = JOptionPane.showInputDialog("Ingrese el tiempo de token");
-        int number = Integer.parseInt(stringInput);
+        stringInput = JOptionPane.showInputDialog("Ingrese las veces a recorrer la simulación");
+        numeroVeces = Integer.parseInt(stringInput);
+        simulacion.setVecesSimulacion(numeroVeces);
         
-        simulacion.setToken(number);
-        String mensaje = Double.toString(simulacion.tiempoToken);
-        JOptionPane.showMessageDialog(null, mensaje);
+        stringInput = JOptionPane.showInputDialog("Ingrese el tiempo de la simulación");
+        tiempoTotal = Double.parseDouble(stringInput);
+        simulacion.setTiempoSimulacion(tiempoTotal);
+        
+        stringInput = JOptionPane.showInputDialog("Ingrese el tiempo de token");
+        tiempoToken = Double.parseDouble(stringInput);
+        simulacion.setToken(tiempoToken);
+        
+        simulacion.iniciarSimulacion();
+        System.out.println(simulacion.filaA+" "+simulacion.filaAP1.size()+" "+simulacion.filaAP2.size());
+        System.out.println(simulacion.filaB+" "+simulacion.filaBP1.size()+" "+simulacion.filaBP2.size());
+        System.out.println(simulacion.filaC+" "+simulacion.filaCP1.size()+" "+simulacion.filaCP2.size());
+        System.out.println(simulacion.filaAntivirus);
+        System.out.println(simulacion.reloj);
     }
 }
