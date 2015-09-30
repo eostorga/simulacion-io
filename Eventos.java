@@ -16,6 +16,7 @@ public class Eventos
     int filaAntivirus;
     int filaRouter;
     int tamanoArchv;                    //
+    int tamArchvLibera;                 //
     int archivosEnviados;               //
     int archivosNoEnviados;             //
     double duracionTotalRevision;       //
@@ -33,6 +34,7 @@ public class Eventos
     ArrayList<Integer> filaCP1 = new ArrayList<>();
     ArrayList<Integer> filaCP2 = new ArrayList<>();
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
+    ArrayList<Integer> colaRouter = new ArrayList<>();
     Random m_random;
     
     public Eventos()
@@ -115,9 +117,9 @@ public class Eventos
                                 break;
                         case 8: CTerminaPonerLinea(eventos[8]);
                                 break;
-                        case 9: llegadaAntivirus(eventos[9]);       // Falta ver como mandarle el tamaño del archivo.
+                        case 9: llegadaAntivirus(eventos[9]);
                                 break;
-                        case 10: liberaAntivirus(eventos[10], 1);   // Falta ver como mandarle el tamaño del archivo.
+                        case 10: liberaAntivirus(eventos[10]);
                                 break;
                         case 11: liberaLinea1(eventos[11], 1);      // Falta ver como mandarle el tamaño del archivo.
                                 break;
@@ -871,39 +873,38 @@ public class Eventos
     public void llegadaAntivirus(double horaEvento)
     {
         reloj = horaEvento;
-        int seEnvia;
+        int probabilidadEnviar;
 
         if(libreAntivirus)
         {
             libreAntivirus = false;
-            seEnvia = tieneVirus(); // Variable aleatoria para decidir si se descarta o se envía.
+            probabilidadEnviar = tieneVirus(); // Variable aleatoria para decidir si se descarta o se envía.
             /* Se genera la bandera de envío y duración total de revisión */
-            if(seEnvia == 4)
+            if(probabilidadEnviar == 4)
             {
                 enviar = false;
-                archivosEnviados++;
                 duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
             }
             else
             {
                 enviar = true;
-                archivosNoEnviados++;
-                if(seEnvia == 1)
+                if(probabilidadEnviar == 1)
                 {
                     duracionTotalRevision = tamanoArchv/8;
                 }
-                if(seEnvia == 2)
+                if(probabilidadEnviar == 2)
                 {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16));
 
                 }
-                if(seEnvia == 3)
+                if(probabilidadEnviar == 3)
                 {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
                 }
             }
-            /* Se libera antivirus = reloj  + duración total */
-            //eventos[10] = reloj +duracionTotalRevision;
+            tamArchvLibera = tamanoArchv;
+            /* Se libera antivirus */
+            eventos[10] = reloj + duracionTotalRevision;
         }
         else
         {
@@ -914,26 +915,31 @@ public class Eventos
         eventos[9] = Double.MAX_VALUE;
     }
     
-    public void liberaAntivirus(double horaEvento, int tamanoArchv)
+    public void liberaAntivirus(double horaEvento)
     {
         reloj = horaEvento;
+        int probabilidadEnviar;
+        int tamArchvLibera2;
         
         if(enviar)
         {
+            archivosEnviados++;
             if(linea1 && linea2)
             {
-                int linea = 1/* Escoger cuál línea agarra */;
+                int linea = escogerLinea(); // Escoge cuál línea agarra
                 if(linea == 1)
                 {
                     linea1 = false;
-                    duracionTransmisionRouter = tamanoArchv / 64;
-                    /* Se libera línea 1 = reloj + duracionTransmisionRouter */
+                    duracionTransmisionRouter = tamArchvLibera / 64;
+                    /* Se libera línea 1 */
+                    //eventos[11] = reloj + duracionTransmisionRouter;
                 }
                 else
                 {
                     linea2 = false;
-                    duracionTransmisionRouter = tamanoArchv / 64;
-                    /* Se libera línea 2 = reloj + duracionTransmisionRouter */
+                    duracionTransmisionRouter = tamArchvLibera / 64;
+                    /* Se libera línea 2 */
+                    //eventos[12] = reloj + duracionTransmisionRouter;
                 }
             }
             else
@@ -941,40 +947,69 @@ public class Eventos
                 if(linea1)
                 {
                     linea1 = false;
-                    duracionTransmisionRouter = tamanoArchv / 64;
-                    /* Se libera línea 1 = reloj + duracionTransmisionRouter */
+                    duracionTransmisionRouter = tamArchvLibera / 64;
+                    /* Se libera línea 1 */
+                    //eventos[11] = reloj + duracionTransmisionRouter;
                 }
                 else
                 {
                     if(linea2)
                     {
                         linea2 = false;
-                        duracionTransmisionRouter = tamanoArchv / 64;
-                        /* Se libera línea 2 = reloj + duracionTransmisionRouter */
+                        duracionTransmisionRouter = tamArchvLibera / 64;
+                        /* Se libera línea 2 */
+                        //eventos[12] = reloj + duracionTransmisionRouter;
                     }
                     else
                     {
                         filaRouter++;
+                        colaRouter.add(tamArchvLibera);
                     }
                 }
             }
         }
         else
         {
-            // contar archivos descartados
+            archivosNoEnviados++;
         }
         if(filaAntivirus != 0)
         {
             libreAntivirus = false;
+            tamArchvLibera2 = colaAntivirus.get(0);
+            colaAntivirus.remove(0);
             filaAntivirus--;
-            int vaEnvio = 1; // Variable aleatoria para decidir si se descarta o se envía
+            probabilidadEnviar = tieneVirus(); // Variable aleatoria para decidir si se descarta o se envía.
             /* Se genera la bandera de envío y duración total de revisión */
-            /* Se libera antivirus = reloj  + duración total */
+            if(probabilidadEnviar == 4)
+            {
+                enviar = false;
+                duracionTotalRevision = ((tamArchvLibera2/8)+(tamArchvLibera2/16)+(tamArchvLibera2/24));
+            }
+            else
+            {
+                enviar = true;
+                if(probabilidadEnviar == 1)
+                {
+                    duracionTotalRevision = tamArchvLibera2/8;
+                }
+                if(probabilidadEnviar == 2)
+                {
+                    duracionTotalRevision = ((tamArchvLibera2/8)+(tamArchvLibera2/16));
+
+                }
+                if(probabilidadEnviar == 3)
+                {
+                    duracionTotalRevision = ((tamArchvLibera2/8)+(tamArchvLibera2/16)+(tamArchvLibera2/24));
+                }
+            }
+            /* Se libera antivirus */
+            eventos[10] = reloj + duracionTotalRevision;
         }
         else
         {
             libreAntivirus = true;
             /* Libera antivirus = infinito */
+            eventos[10] = Double.MAX_VALUE;
         }        
     }
     
@@ -1000,9 +1035,8 @@ public class Eventos
     /************* GENERACIÓN DE NÚMEROS ALEATORIOS ***************************/
     
     /**
-     * Asignar 
-     */
-    
+     * Asignar la cantidad de revisiones y  si tiene virus o no
+     */  
     public int tieneVirus()
     {
         int i = m_random.nextInt(1000000); // Valor entre 0 (incluido) y 1000000 (excluido).
@@ -1046,6 +1080,25 @@ public class Eventos
     }
     
     /**
+     * Escoge cuál línea del router usar
+     * Variable aleatoria uniforme: X={1,2}
+     */
+    public int escogerLinea()
+    {
+        int numLinea = 0;
+        int i = m_random.nextInt(10); // Valor entre 0 (incluido) y 10 (excluido).
+        if(i < 5)   // 0 <= i < 5
+        {
+            numLinea = 1;
+        }
+        else        // 5 <= i < 10
+        {
+            numLinea = 2;
+        }
+        return numLinea;
+    }
+    
+    /**
      * Asigna tamaño a un archivo.
      * Variable aleatoria uniforme: X={1,2,3,...,64}
      */
@@ -1053,11 +1106,8 @@ public class Eventos
     {
         int tamano= 0;
         int i = m_random.nextInt(1000000); // Valor entre 0 (incluido) y 1000000 (excluido).
-        // 0 <= i < 15624
         if(i < 15625){ tamano = 1; }
-        // 15625 <= i < 31250
         if( i >= 15625 && i < 31250){ tamano = 2; }
-        // 31250 <= i < 46875
         if( i >= 31250 && i < 46875){ tamano = 3; }
         if( i >= 46875 && i < 62500){ tamano = 4; }
         if( i >= 62500 && i < 78125){ tamano = 5; }
@@ -1186,9 +1236,10 @@ public class Eventos
         System.out.println(simulacion.filaA+" "+simulacion.filaAP1.size()+" "+simulacion.filaAP2.size());
         System.out.println(simulacion.filaB+" "+simulacion.filaBP1.size()+" "+simulacion.filaBP2.size());
         System.out.println(simulacion.filaC+" "+simulacion.filaCP1.size()+" "+simulacion.filaCP2.size());
-        System.out.println(simulacion.filaAntivirus);
-        System.out.println(simulacion.archivosEnviados);
-        System.out.println(simulacion.archivosNoEnviados);
-        System.out.println(simulacion.reloj);
+        System.out.println("Fila Antivirus "+simulacion.filaAntivirus);
+        System.out.println("Enviados: "+simulacion.archivosEnviados);
+        System.out.println("No enviados: "+simulacion.archivosNoEnviados);
+        System.out.println("Fila Router: "+simulacion.filaRouter);
+        System.out.println("Reloj: "+simulacion.reloj);
     }
 }
