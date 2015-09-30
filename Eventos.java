@@ -13,19 +13,22 @@ public class Eventos
     int filaA;                          //
     int filaB;                          //
     int filaC;                          //
-    int filaAntivirus;
-    int filaRouter;
+    int filaAntivirus;                  //
+    int filaRouter;                     //
     int tamanoArchv;                    //
     int tamArchvLibera;                 //
+    int tamArchvL1;                     //
+    int tamArchvL2;                     //
     int archivosEnviados;               //
     int archivosNoEnviados;             //
     double duracionTotalRevision;       //
-    double duracionTransmisionRouter;
+    double duracionTransmisionL1;       //
+    double duracionTransmisionL2;       //
     double tiempoTransferencia;         //
     boolean libreAntivirus = true;      //
     boolean enviar = false;             //
-    boolean linea1 = true;
-    boolean linea2 = true;
+    boolean linea1 = true;              //
+    boolean linea2 = true;              //
     double[] eventos;                   //
     ArrayList<Integer> filaAP1 = new ArrayList<>();
     ArrayList<Integer> filaAP2 = new ArrayList<>();
@@ -121,9 +124,9 @@ public class Eventos
                                 break;
                         case 10: liberaAntivirus(eventos[10]);
                                 break;
-                        case 11: liberaLinea1(eventos[11], 1);      // Falta ver como mandarle el tamaño del archivo.
+                        case 11: liberaLinea1(eventos[11]);      // Falta ver como mandarle el tamaño del archivo.
                                 break;
-                        case 12: liberaLinea2(eventos[12], 1);      // Falta ver como mandarle el tamaño del archivo.
+                        case 12: liberaLinea2(eventos[12]);      // Falta ver como mandarle el tamaño del archivo.
                                 break;
                     }
                 }
@@ -930,16 +933,18 @@ public class Eventos
                 if(linea == 1)
                 {
                     linea1 = false;
-                    duracionTransmisionRouter = tamArchvLibera / 64;
+                    duracionTransmisionL1 = tamArchvLibera / 64;
+                    tamArchvL1 = tamArchvLibera;
                     /* Se libera línea 1 */
-                    //eventos[11] = reloj + duracionTransmisionRouter;
+                    eventos[11] = reloj + duracionTransmisionL1;
                 }
                 else
                 {
                     linea2 = false;
-                    duracionTransmisionRouter = tamArchvLibera / 64;
+                    duracionTransmisionL2 = tamArchvLibera / 64;
+                    tamArchvL2 = tamArchvLibera;
                     /* Se libera línea 2 */
-                    //eventos[12] = reloj + duracionTransmisionRouter;
+                    eventos[12] = reloj + duracionTransmisionL2;
                 }
             }
             else
@@ -947,18 +952,20 @@ public class Eventos
                 if(linea1)
                 {
                     linea1 = false;
-                    duracionTransmisionRouter = tamArchvLibera / 64;
+                    duracionTransmisionL1 = tamArchvLibera / 64;
+                    tamArchvL1 = tamArchvLibera;
                     /* Se libera línea 1 */
-                    //eventos[11] = reloj + duracionTransmisionRouter;
+                    eventos[11] = reloj + duracionTransmisionL1;
                 }
                 else
                 {
                     if(linea2)
                     {
                         linea2 = false;
-                        duracionTransmisionRouter = tamArchvLibera / 64;
+                        duracionTransmisionL2 = tamArchvLibera / 64;
+                        tamArchvL2 = tamArchvLibera;
                         /* Se libera línea 2 */
-                        //eventos[12] = reloj + duracionTransmisionRouter;
+                        eventos[12] = reloj + duracionTransmisionL2;
                     }
                     else
                     {
@@ -1013,24 +1020,48 @@ public class Eventos
         }        
     }
     
-    public void liberaLinea1(double horaEvento, int tamanoArchv)
+    public void liberaLinea1(double horaEvento)
     {
         reloj = horaEvento;
         
         if(filaRouter != 0)
         {
-            filaRouter--;
             linea1 = false;
-            duracionTransmisionRouter = tamanoArchv / 64;
-            /* Se libera línea 1 = reloj + duracionTransmisionRouter */
+            tamArchvL1 = colaRouter.get(0);
+            filaRouter--;
+            colaRouter.remove(0);
+            duracionTransmisionL1 = tamArchvL1 / 64;
+            /* Se libera línea 1 */
+            eventos[11] = reloj + duracionTransmisionL1;
         }
         else
         {
-            /* Se libera línea 1 = infinito */
             linea1 = true;
+            /* Se libera línea 1 = infinito */
+            eventos[11] = Double.MAX_VALUE;
         }
     }
-    public void liberaLinea2(double horaEvento, int tamanoArchv){}
+    public void liberaLinea2(double horaEvento)
+    {
+        reloj = horaEvento;
+        
+        if(filaRouter != 0)
+        {
+            linea2 = false;
+            tamArchvL2 = colaRouter.get(0);
+            filaRouter--;
+            colaRouter.remove(0);
+            duracionTransmisionL2 = tamArchvL2 / 64;
+            /* Se libera línea 2 */
+            eventos[12] = reloj + duracionTransmisionL2;
+        }
+        else
+        {
+            linea1 = true;
+            /* Se libera línea 1 = infinito */
+            eventos[12] = Double.MAX_VALUE;
+        }
+    }
 
     /************* GENERACIÓN DE NÚMEROS ALEATORIOS ***************************/
     
