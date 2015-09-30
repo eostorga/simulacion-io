@@ -984,6 +984,33 @@ public class Eventos
     /************* GENERACIÓN DE NÚMEROS ALEATORIOS ***************************/
     
     /**
+     * Asignar 
+     */
+    
+    public int tieneVirus()
+    {
+        int i = m_random.nextInt(1000000); // Valor entre 0 (incluido) y 1000000 (excluido).
+        int j = 0;
+        if(i < 950000)
+        {
+            j = 1;
+        }
+        if(i >= 950000 && i < 997500)
+        {
+            j = 2;
+        }
+        if(i >= 997500 && i < 999875)
+        {
+            j = 3;
+        }
+        if(i >= 999875 && i < 1000000)
+        {
+            j = 4;
+        }
+        return j;
+    }
+    
+    /**
      * Asigna prioridad a un archivo.
      * Variable aleatoria uniforme: X={1,2}
      */
