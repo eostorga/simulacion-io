@@ -120,8 +120,8 @@ public class Interfaz extends javax.swing.JFrame {
         double time = Double.parseDouble(tiempo.getText());
         double tToken = Double.parseDouble(token.getText());
         boolean estadoLento = lento.getState();
-        Eventos m_Eventos( veces, time, tToken, estadoLento);
-        
+        Eventos m_Eventos = new Eventos( veces, time, tToken, estadoLento);
+        m_Eventos.iniciarSimulacion();
     }//GEN-LAST:event_iniciarSimulacionActionPerformed
 
     /**
@@ -171,5 +171,5 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JTextField token;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    private java.awt.Checkbox lnto;
+
 }

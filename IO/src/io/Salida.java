@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package io;
+import io.Eventos;
 
 /**
  *
@@ -13,13 +14,88 @@ public class Salida extends javax.swing.JFrame {
 
     /**
      * Creates new form Salida
-     */
+     */ 
     
-    
+    //Eventos aux = new Eventos();
     
     public Salida() {
-        
         initComponents();
+    }
+    
+    public void setValores(){
+        ColaATipo1.setText(""+aux.filaAP1.size());
+        ColaATipo2.setText(""+aux.filaAP2.size());
+        ColaBTipo1.setText(""+aux.filaBP1.size());
+        ColaBTipo2.setText(""+aux.filaBP2.size());
+        ColaCTipo1.setText(""+aux.filaCP1.size());
+        ColaCTipo2.setText(""+aux.filaCP2.size());
+        ColaAntivirus.setText(""+aux.colaAntivirus.size());
+        switch(aux.tieneToken){
+            case 1:
+                TieneToken.setText("A");
+                break;
+            case 2:
+                TieneToken.setText("B");
+                break;
+            case 3:
+                TieneToken.setText("C");
+                break;
+            default:
+                break;      
+        }
+        TiempoToken.setText(""+aux.tiempoToken);
+        if(aux.linea1 && aux.linea2){
+            HilosRouter.setText("2");
+        }
+        if((!aux.linea1 && aux.linea2)||(aux.linea1 && !aux.linea2)){
+            HilosRouter.setText("1");
+        }
+        if(!aux.linea1 && !aux.linea2){
+            HilosRouter.setText("0");
+        }
+        switch(aux.numeroEvento){
+            case 0:
+                TipoEvento.setText("Llega archivo a A");
+                break;
+            case 1:
+                TipoEvento.setText("Llega archivo a B");
+                break;
+            case 2:
+                TipoEvento.setText("Llega archivo a C");
+                break;
+            case 3:
+                TipoEvento.setText("A recibe Token");
+                break;
+            case 4:
+                TipoEvento.setText("B recibe Token");
+                break;
+            case 5:
+                TipoEvento.setText("C recibe Token");
+                break;
+            case 6:
+                TipoEvento.setText("A termina de poner en la linea");
+                break;
+            case 7:
+                TipoEvento.setText("B termina de poner en la linea");
+                break;
+            case 8:
+                TipoEvento.setText("C termina de poner en la linea");
+                break;
+            case 9:
+                TipoEvento.setText("Llegada de archivo a antivirus");
+                break;
+            case 10:
+                TipoEvento.setText("Se libera Antivirus");
+                break;
+            case 11:
+                TipoEvento.setText("Se libre linea 1");
+                break;
+            case 12:
+                TipoEvento.setText("Se libre linea 2");
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -36,39 +112,39 @@ public class Salida extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        ColaATipo1 = new javax.swing.JTextPane();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane2 = new javax.swing.JTextPane();
+        ColaATipo2 = new javax.swing.JTextPane();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextPane3 = new javax.swing.JTextPane();
+        ColaBTipo1 = new javax.swing.JTextPane();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextPane4 = new javax.swing.JTextPane();
+        ColaBTipo2 = new javax.swing.JTextPane();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTextPane5 = new javax.swing.JTextPane();
+        ColaCTipo1 = new javax.swing.JTextPane();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane6 = new javax.swing.JScrollPane();
-        jTextPane6 = new javax.swing.JTextPane();
+        ColaCTipo2 = new javax.swing.JTextPane();
         jLabel16 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
-        jTextPane7 = new javax.swing.JTextPane();
+        ColaAntivirus = new javax.swing.JTextPane();
         jLabel17 = new javax.swing.JLabel();
         jScrollPane8 = new javax.swing.JScrollPane();
-        jTextPane8 = new javax.swing.JTextPane();
+        TieneToken = new javax.swing.JTextPane();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane9 = new javax.swing.JScrollPane();
-        jTextPane9 = new javax.swing.JTextPane();
+        TiempoToken = new javax.swing.JTextPane();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane10 = new javax.swing.JScrollPane();
-        jTextPane10 = new javax.swing.JTextPane();
+        HilosRouter = new javax.swing.JTextPane();
         jLabel20 = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
-        jTextPane11 = new javax.swing.JTextPane();
+        TipoEvento = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -78,58 +154,58 @@ public class Salida extends javax.swing.JFrame {
 
         jLabel8.setText("Tipo 1");
 
-        jTextPane1.setEditable(false);
-        jScrollPane1.setViewportView(jTextPane1);
+        ColaATipo1.setEditable(false);
+        jScrollPane1.setViewportView(ColaATipo1);
 
         jLabel9.setText("Tipo 2");
 
-        jTextPane2.setEditable(false);
-        jScrollPane2.setViewportView(jTextPane2);
+        ColaATipo2.setEditable(false);
+        jScrollPane2.setViewportView(ColaATipo2);
 
         jLabel10.setText("Cola B");
 
         jLabel11.setText("Tipo 1");
 
-        jTextPane3.setEditable(false);
-        jScrollPane3.setViewportView(jTextPane3);
+        ColaBTipo1.setEditable(false);
+        jScrollPane3.setViewportView(ColaBTipo1);
 
         jLabel12.setText("Tipo 2");
 
-        jTextPane4.setEditable(false);
-        jScrollPane4.setViewportView(jTextPane4);
+        ColaBTipo2.setEditable(false);
+        jScrollPane4.setViewportView(ColaBTipo2);
 
         jLabel13.setText("Cola C");
 
         jLabel14.setText("Tipo 1");
 
-        jTextPane5.setEditable(false);
-        jScrollPane5.setViewportView(jTextPane5);
+        ColaCTipo1.setEditable(false);
+        jScrollPane5.setViewportView(ColaCTipo1);
 
         jLabel15.setText("Tipo 2");
 
-        jTextPane6.setEditable(false);
-        jScrollPane6.setViewportView(jTextPane6);
+        ColaCTipo2.setEditable(false);
+        jScrollPane6.setViewportView(ColaCTipo2);
 
         jLabel16.setText("Cola de Antivirus");
 
-        jTextPane7.setEditable(false);
-        jScrollPane7.setViewportView(jTextPane7);
+        ColaAntivirus.setEditable(false);
+        jScrollPane7.setViewportView(ColaAntivirus);
 
         jLabel17.setText("¿Quien tiene el token?");
 
-        jScrollPane8.setViewportView(jTextPane8);
+        jScrollPane8.setViewportView(TieneToken);
 
         jLabel18.setText("Tiempo de Token");
 
-        jScrollPane9.setViewportView(jTextPane9);
+        jScrollPane9.setViewportView(TiempoToken);
 
         jLabel19.setText("Hilos en Router");
 
-        jScrollPane10.setViewportView(jTextPane10);
+        jScrollPane10.setViewportView(HilosRouter);
 
-        jLabel20.setText("Tipo Archivo");
+        jLabel20.setText("Tipo Evento");
 
-        jScrollPane11.setViewportView(jTextPane11);
+        jScrollPane11.setViewportView(TipoEvento);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,31 +215,17 @@ public class Salida extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel10))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel10))
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel13))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(62, 62, 62)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel18)
-                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel19)
-                            .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel20)
-                            .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(43, Short.MAX_VALUE))
+                        .addComponent(jLabel2)))
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -176,7 +238,7 @@ public class Salida extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(jLabel8)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
@@ -184,11 +246,12 @@ public class Salida extends javax.swing.JFrame {
                                         .addGap(33, 33, 33))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addComponent(jLabel14)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)))
+                                        .addGap(6, 6, 6)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(35, 35, 35))))
+                                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(4, 4, 4)
+                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addComponent(jLabel16)))
@@ -207,11 +270,33 @@ public class Salida extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane6))))
+                                .addComponent(jScrollPane6)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel17)
                         .addGap(35, 35, 35))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
+                    .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
+                    .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane11)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addComponent(jLabel20)
+                        .addGap(45, 45, 45))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,9 +331,9 @@ public class Salida extends javax.swing.JFrame {
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel14))
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel15)
-                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel16)
@@ -268,7 +353,7 @@ public class Salida extends javax.swing.JFrame {
                             .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -316,6 +401,17 @@ public class Salida extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextPane ColaATipo1;
+    private javax.swing.JTextPane ColaATipo2;
+    private javax.swing.JTextPane ColaAntivirus;
+    private javax.swing.JTextPane ColaBTipo1;
+    private javax.swing.JTextPane ColaBTipo2;
+    private javax.swing.JTextPane ColaCTipo1;
+    private javax.swing.JTextPane ColaCTipo2;
+    private javax.swing.JTextPane HilosRouter;
+    private javax.swing.JTextPane TiempoToken;
+    private javax.swing.JTextPane TieneToken;
+    private javax.swing.JTextPane TipoEvento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -343,16 +439,7 @@ public class Salida extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
-    private javax.swing.JTextPane jTextPane1;
-    private javax.swing.JTextPane jTextPane10;
-    private javax.swing.JTextPane jTextPane11;
-    private javax.swing.JTextPane jTextPane2;
-    private javax.swing.JTextPane jTextPane3;
-    private javax.swing.JTextPane jTextPane4;
-    private javax.swing.JTextPane jTextPane5;
-    private javax.swing.JTextPane jTextPane6;
-    private javax.swing.JTextPane jTextPane7;
-    private javax.swing.JTextPane jTextPane8;
-    private javax.swing.JTextPane jTextPane9;
     // End of variables declaration//GEN-END:variables
 }
+
+
