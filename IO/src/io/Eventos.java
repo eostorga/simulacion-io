@@ -1,6 +1,5 @@
-package io;
-import java.util.ArrayList;
-import java.util.Random;
+package Simulacion;
+import java.util.*;
 import javax.swing.JOptionPane;
 
 public class Eventos
@@ -33,6 +32,7 @@ public class Eventos
     boolean enviar = false;             //
     boolean linea1 = true;              //
     boolean linea2 = true;              //
+    boolean lento = false;              //
     double[] eventos;                   //
     ArrayList<Integer> filaAP1 = new ArrayList<>();
     ArrayList<Integer> filaAP2 = new ArrayList<>();
@@ -43,6 +43,7 @@ public class Eventos
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
     ArrayList<Integer> colaRouter = new ArrayList<>();
     Random m_random;
+    Comparator<Integer> comparador = Collections.reverseOrder();
     
     public Eventos(int vecesI, double tiempoI, double tokenI, boolean lentoI)
     {
@@ -63,23 +64,12 @@ public class Eventos
          * [11] -> Se libera línea 1
          * [12] -> Se libera línea 2
         */
+        tiempoToken = tokenI;
+        tiempoTotalSimulacion = tiempoI;
+        vecesSimulacion = vecesI;
+        lento = lentoI;
         m_random = new Random();
         inicializarEventos();
-    }
-    
-    public void setToken(double tiempoUsoToken)
-    {
-        tiempoToken = tiempoUsoToken;
-    }
-    
-    public void setTiempoSimulacion(double tiempoSimulacion)
-    {
-        tiempoTotalSimulacion = tiempoSimulacion;
-    }
-    
-    public void setVecesSimulacion(int veces)
-    {
-        vecesSimulacion = veces;
     }
     
     public void inicializarEventos()
@@ -163,17 +153,19 @@ public class Eventos
     {
         reloj = horaEvento;
         filaA++;
-        int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
-        int tamano = asignarTamano();         // Variable aleatoria discreta (1-64).        
+        int prioridad = asignarPrioridad();  // Variable aleatoria discreta.
+        int tamano = asignarTamano();        // Variable aleatoria discreta (1-64).        
         if(prioridad == 1)
         {
             filaAP1.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaAP1, comparador);
         }
         else
         {
             filaAP2.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaAP2, comparador);
         }        
         eventos[0] = reloj + proximoArriboA();// Próxima llegada de archivo a A.
     }
@@ -188,11 +180,13 @@ public class Eventos
         {
             filaBP1.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaBP1, comparador);
         }
         else
         {
             filaBP2.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaBP2, comparador);
         }        
         eventos[1] = reloj + proximoArriboB();// Próxima llegada de archivo a B.
     }
@@ -207,11 +201,13 @@ public class Eventos
         {
             filaCP1.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaCP1, comparador);
         }
         else
         {
             filaCP2.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaCP2, comparador);
         }        
         eventos[2] = reloj + proximoArriboC();// Próxima llegada de archivo a C.
     }
@@ -1259,33 +1255,5 @@ public class Eventos
         double tiempoTotal;         // Tiempo total en segundos para correr cada vez la simulación.
         boolean modoLento = false;  // Si desea ver la simulación correr en modo lento o no.
         double tiempoToken;         // El tiempo durante el cuál a cada máquina se le asigna el token.
-        
-        /*simulacion = new Eventos();
-        String stringInput;
-        
-        stringInput = JOptionPane.showInputDialog("Ingrese las veces a recorrer la simulación");
-        numeroVeces = Integer.parseInt(stringInput);
-        simulacion.setVecesSimulacion(numeroVeces);
-        
-        stringInput = JOptionPane.showInputDialog("Ingrese el tiempo de la simulación");
-        tiempoTotal = Double.parseDouble(stringInput);
-        simulacion.setTiempoSimulacion(tiempoTotal);
-        
-        stringInput = JOptionPane.showInputDialog("Ingrese el tiempo de token");
-        tiempoToken = Double.parseDouble(stringInput);
-        simulacion.setToken(tiempoToken);
-        
-        simulacion.iniciarSimulacion();
-        System.out.println(simulacion.filaA+" "+simulacion.filaAP1.size()+" "+simulacion.filaAP2.size());
-        System.out.println(simulacion.filaB+" "+simulacion.filaBP1.size()+" "+simulacion.filaBP2.size());
-        System.out.println(simulacion.filaC+" "+simulacion.filaCP1.size()+" "+simulacion.filaCP2.size());
-        System.out.println("Fila Antivirus "+simulacion.filaAntivirus);
-        System.out.println("Enviados: "+simulacion.archivosEnviados);
-        System.out.println("No enviados: "+simulacion.archivosNoEnviados);
-        System.out.println("Fila Router: "+simulacion.filaRouter);
-        System.out.println("Enviados L1: "+simulacion.enviadosL1);
-        System.out.println("Enviados L2: "+simulacion.enviadosL2);
-        System.out.println("Reloj: "+simulacion.reloj);
-                */
     }
 }
