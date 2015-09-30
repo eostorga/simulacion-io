@@ -120,8 +120,14 @@ public class Interfaz extends javax.swing.JFrame {
         double time = Double.parseDouble(tiempo.getText());
         double tToken = Double.parseDouble(token.getText());
         boolean estadoLento = lento.getState();
-        Eventos m_Eventos = new Eventos( veces, time, tToken, estadoLento);
-        m_Eventos.iniciarSimulacion();
+        Eventos m_eventos = new Eventos( veces, time, tToken, estadoLento);
+        if(estadoLento){
+            Salida m_salida = new Salida(m_eventos);
+            this.setVisible(false);
+            m_salida.setVisible(true);
+        }
+        m_eventos.iniciarSimulacion();
+        
     }//GEN-LAST:event_iniciarSimulacionActionPerformed
 
     /**
