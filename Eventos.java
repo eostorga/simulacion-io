@@ -44,7 +44,7 @@ public class Eventos
     ArrayList<Integer> colaRouter = new ArrayList<>();
     Random m_random;
     
-    public Eventos()
+    public Eventos(int vecesI, double tiempoI, double tokenI, boolean lentoI)
     {
         eventos = new double[13]; // Número total de eventos.
         /* DEFINICIÓN DE LOS EVENTOS EN EL ARREGLO
