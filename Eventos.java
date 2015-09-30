@@ -15,8 +15,8 @@ public class Eventos
     int filaC;
     int filaAntivirus;
     int filaRouter;
-    int duracionTotalRevision;
-    int duracionTransmisionRouter;
+    double duracionTotalRevision;
+    double duracionTransmisionRouter;
     double tiempoTransferencia;
     boolean libreAntivirus = true;
     boolean enviar = false;
@@ -862,11 +862,30 @@ public class Eventos
     public void llegadaAntivirus(double horaEvento, int tamanoArchv)
     {
         reloj = horaEvento;
-        
-        if(libreAntivirus)
-        {
+        int seEnvia;
+
+        if(libreAntivirus) {
             libreAntivirus = false;
-            int vaEnvio = 1; // Variable aleatoria para decidir si se descarta o se envía
+            seEnvia = tieneVirus();
+            if(seEnvia == 4){
+                enviar = false;
+                duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
+            }else{
+                enviar = true;
+                if(seEnvia == 1){
+                    duracionTotalRevision = tamanoArchv/8;
+                }
+                if(seEnvia == 2){
+                    duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16));
+
+                }
+                if(seEnvia == 3){
+                    duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
+                }
+            }
+            eventos[10] = reloj +duracionTotalRevision;
+
+             // Variable aleatoria para decidir si se descarta o se envía
             /* Se genera la bandera de envío y duración total de revisión */
             /* Se libera antivirus = reloj  + duración total */
         }
