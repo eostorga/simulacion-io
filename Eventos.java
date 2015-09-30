@@ -5,24 +5,27 @@ import javax.swing.JOptionPane;
 
 public class Eventos
 {
-    double reloj = 0;
+    double reloj = 0;                   //
     double tiempoTotalSimulacion;       // Tiempo total en segundos para correr cada vez la simulación.
-    double tiempo;
-    double tiempoToken;
+    double tiempo;                      //
+    double tiempoToken;                 //
     int vecesSimulacion;                // Número de veces que se va a correr la simulación.
-    int filaA;
-    int filaB;
-    int filaC;
+    int filaA;                          //
+    int filaB;                          //
+    int filaC;                          //
     int filaAntivirus;
     int filaRouter;
-    double duracionTotalRevision;
+    int tamanoArchv;                    //
+    int archivosEnviados;               //
+    int archivosNoEnviados;             //
+    double duracionTotalRevision;       //
     double duracionTransmisionRouter;
-    double tiempoTransferencia;
-    boolean libreAntivirus = true;
-    boolean enviar = false;
+    double tiempoTransferencia;         //
+    boolean libreAntivirus = true;      //
+    boolean enviar = false;             //
     boolean linea1 = true;
     boolean linea2 = true;
-    double[] eventos;
+    double[] eventos;                   //
     ArrayList<Integer> filaAP1 = new ArrayList<>();
     ArrayList<Integer> filaAP2 = new ArrayList<>();
     ArrayList<Integer> filaBP1 = new ArrayList<>();
@@ -72,14 +75,11 @@ public class Eventos
     
     public void inicializarEventos()
     {
-        /*eventos[0] = Double.MAX_VALUE;
-        eventos[1] = Double.MAX_VALUE;
-        eventos[2] = Double.MAX_VALUE;*/
         eventos[0] = reloj + proximoArriboA();
         eventos[1] = reloj + proximoArriboB();
         eventos[2] = reloj + proximoArriboC();
         eventos[3] = reloj + 5;
-        for(int i = 4; i<13; i++)
+        for(int i = 4; i < 13; i++)
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
         }
@@ -103,11 +103,11 @@ public class Eventos
                                 break;
                         case 2: llegaArchivoC(eventos[2]);
                                 break;
-                        case 3: ARecibeToken(eventos[3]); System.out.println("Token A");
+                        case 3: ARecibeToken(eventos[3]);
                                 break;
-                        case 4: BRecibeToken(eventos[4]); System.out.println("Token B");
+                        case 4: BRecibeToken(eventos[4]);
                                 break;
-                        case 5: CRecibeToken(eventos[5]); System.out.println("Token C");
+                        case 5: CRecibeToken(eventos[5]);
                                 break;
                         case 6: ATerminaPonerLinea(eventos[6]);
                                 break;
@@ -115,7 +115,7 @@ public class Eventos
                                 break;
                         case 8: CTerminaPonerLinea(eventos[8]);
                                 break;
-                        case 9: llegadaAntivirus(eventos[9], 1);    // Falta ver como mandarle el tamaño del archivo.
+                        case 9: llegadaAntivirus(eventos[9]);       // Falta ver como mandarle el tamaño del archivo.
                                 break;
                         case 10: liberaAntivirus(eventos[10], 1);   // Falta ver como mandarle el tamaño del archivo.
                                 break;
@@ -532,6 +532,7 @@ public class Eventos
                     if(tiempoTransferencia <= tiempo)
                     {
                         filaA -= 1;
+                        tamanoArchv = filaAP1.get(i-1);
                         filaAP1.remove(i-1);
                         /* A termina poner en línea */
                         eventos[6] = reloj + tiempoTransferencia;
@@ -552,6 +553,7 @@ public class Eventos
                             if(tiempoTransferencia <= tiempo)
                             {
                                 filaA -= 1;
+                                tamanoArchv = filaAP2.get(i-1);
                                 filaAP2.remove(i-1);
                                 /* A termina poner en línea */
                                 eventos[6] = reloj + tiempoTransferencia;
@@ -587,6 +589,7 @@ public class Eventos
                         if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
                         {
                             filaA -= 1;
+                            tamanoArchv = filaAP2.get(i-1);
                             filaAP2.remove(i-1);
                             /* A termina poner en línea */
                             eventos[6] = reloj + tiempoTransferencia;
@@ -648,6 +651,7 @@ public class Eventos
                     if(tiempoTransferencia <= tiempo)
                     {
                         filaB -= 1;
+                        tamanoArchv = filaBP1.get(i-1);
                         filaBP1.remove(i-1);
                         /* B termina poner en línea */
                         eventos[7] = reloj + tiempoTransferencia;
@@ -668,6 +672,7 @@ public class Eventos
                             if(tiempoTransferencia <= tiempo)
                             {
                                 filaB -= 1;
+                                tamanoArchv = filaBP2.get(i-1);
                                 filaBP2.remove(i-1);
                                 /* B termina poner en línea */
                                 eventos[7] = reloj + tiempoTransferencia;
@@ -703,6 +708,7 @@ public class Eventos
                         if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
                         {
                             filaB -= 1;
+                            tamanoArchv = filaBP2.get(i-1);
                             filaBP2.remove(i-1);
                             /* B termina poner en línea */
                             eventos[7] = reloj + tiempoTransferencia;
@@ -765,6 +771,7 @@ public class Eventos
                     if(tiempoTransferencia <= tiempo)
                     {
                         filaC -= 1;
+                        tamanoArchv = filaCP1.get(i-1);
                         filaCP1.remove(i-1);
                         /* C termina poner en línea */
                         eventos[8] = reloj + tiempoTransferencia;
@@ -785,6 +792,7 @@ public class Eventos
                             if(tiempoTransferencia <= tiempo)
                             {
                                 filaC -= 1;
+                                tamanoArchv = filaCP2.get(i-1);
                                 filaCP2.remove(i-1);
                                 /* C termina poner en línea */
                                 eventos[8] = reloj + tiempoTransferencia;
@@ -820,6 +828,7 @@ public class Eventos
                         if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
                         {
                             filaC -= 1;
+                            tamanoArchv = filaCP2.get(i-1);
                             filaCP2.remove(i-1);
                             /* C termina poner en línea */
                             eventos[8] = reloj + tiempoTransferencia;
@@ -859,35 +868,42 @@ public class Eventos
         }
     }
     
-    public void llegadaAntivirus(double horaEvento, int tamanoArchv)
+    public void llegadaAntivirus(double horaEvento)
     {
         reloj = horaEvento;
         int seEnvia;
 
-        if(libreAntivirus) {
+        if(libreAntivirus)
+        {
             libreAntivirus = false;
-            seEnvia = tieneVirus();
-            if(seEnvia == 4){
+            seEnvia = tieneVirus(); // Variable aleatoria para decidir si se descarta o se envía.
+            /* Se genera la bandera de envío y duración total de revisión */
+            if(seEnvia == 4)
+            {
                 enviar = false;
+                archivosEnviados++;
                 duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
-            }else{
+            }
+            else
+            {
                 enviar = true;
-                if(seEnvia == 1){
+                archivosNoEnviados++;
+                if(seEnvia == 1)
+                {
                     duracionTotalRevision = tamanoArchv/8;
                 }
-                if(seEnvia == 2){
+                if(seEnvia == 2)
+                {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16));
 
                 }
-                if(seEnvia == 3){
+                if(seEnvia == 3)
+                {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
                 }
             }
-            eventos[10] = reloj +duracionTotalRevision;
-
-             // Variable aleatoria para decidir si se descarta o se envía
-            /* Se genera la bandera de envío y duración total de revisión */
             /* Se libera antivirus = reloj  + duración total */
+            //eventos[10] = reloj +duracionTotalRevision;
         }
         else
         {
@@ -1171,6 +1187,8 @@ public class Eventos
         System.out.println(simulacion.filaB+" "+simulacion.filaBP1.size()+" "+simulacion.filaBP2.size());
         System.out.println(simulacion.filaC+" "+simulacion.filaCP1.size()+" "+simulacion.filaCP2.size());
         System.out.println(simulacion.filaAntivirus);
+        System.out.println(simulacion.archivosEnviados);
+        System.out.println(simulacion.archivosNoEnviados);
         System.out.println(simulacion.reloj);
     }
 }
