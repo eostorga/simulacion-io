@@ -10,14 +10,13 @@ package io;
  * @author Ricardo Aguilar
  */
 public class Interfaz extends javax.swing.JFrame {
-
     /**
      * Creates new form Interfaz
      */
     public Interfaz() {
         initComponents();
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,22 +25,104 @@ public class Interfaz extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
+
+        iniciarSimulacion = new javax.swing.JButton();
+        labelCorridas = new javax.swing.JLabel();
+        labelTiempo = new javax.swing.JLabel();
+        corridas = new javax.swing.JTextField();
+        tiempo = new javax.swing.JTextField();
+        labelTitulo = new javax.swing.JLabel();
+        labelToken = new javax.swing.JLabel();
+        token = new javax.swing.JTextField();
+        lento = new java.awt.Checkbox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        iniciarSimulacion.setText("Iniciar Simulación");
+        iniciarSimulacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                iniciarSimulacionActionPerformed(evt);
+            }
+        });
+
+        labelCorridas.setText("Veces a corres la sumulación");
+
+        labelTiempo.setText("Tiempo de la simulación");
+
+        labelTitulo.setText("Proyecto de Simulacion");
+
+        labelToken.setText("Tiempo de token");
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, lento, org.jdesktop.beansbinding.ELProperty.create("Version lenta"), lento, org.jdesktop.beansbinding.BeanProperty.create("label"));
+        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(83, 83, 83)
+                        .addComponent(labelTitulo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(labelCorridas)
+                                .addComponent(labelTiempo)
+                                .addComponent(labelToken)))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(token, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                            .addComponent(tiempo)
+                            .addComponent(corridas))))
+                .addContainerGap(74, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(iniciarSimulacion)
+                .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelCorridas)
+                    .addComponent(corridas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tiempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelTiempo))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelToken)
+                    .addComponent(token, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iniciarSimulacion)
+                    .addComponent(lento, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
         );
+
+        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void iniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarSimulacionActionPerformed
+        // TODO add your handling code here:
+        int veces = Integer.parseInt(corridas.getText());
+        double time = Double.parseDouble(tiempo.getText());
+        double tToken = Double.parseDouble(token.getText());
+        boolean estadoLento = lento.getState();
+        Eventos m_Eventos( veces, time, tToken, estadoLento);
+        
+    }//GEN-LAST:event_iniciarSimulacionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +160,16 @@ public class Interfaz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField corridas;
+    private javax.swing.JButton iniciarSimulacion;
+    private javax.swing.JLabel labelCorridas;
+    private javax.swing.JLabel labelTiempo;
+    private javax.swing.JLabel labelTitulo;
+    private javax.swing.JLabel labelToken;
+    private java.awt.Checkbox lento;
+    private javax.swing.JTextField tiempo;
+    private javax.swing.JTextField token;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private java.awt.Checkbox lnto;
 }

@@ -15,7 +15,7 @@ public class Salida extends javax.swing.JFrame {
      * Creates new form Salida
      */
     
-    Eventos aux = new Eventos();
+    
     
     public Salida() {
         
@@ -307,6 +307,12 @@ public class Salida extends javax.swing.JFrame {
                 new Salida().setVisible(true);
             }
         });
+        
+    }
+    
+    public void pba(){
+        this.setVisible(true);
+        this.jTextPane1.setText(""+17);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
