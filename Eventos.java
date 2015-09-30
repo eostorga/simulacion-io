@@ -1,6 +1,5 @@
 package Simulacion;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 import javax.swing.JOptionPane;
 
 public class Eventos
@@ -44,6 +43,7 @@ public class Eventos
     ArrayList<Integer> colaAntivirus = new ArrayList<>();
     ArrayList<Integer> colaRouter = new ArrayList<>();
     Random m_random;
+    Comparator<Integer> comparador = Collections.reverseOrder();
     
     public Eventos(int vecesI, double tiempoI, double tokenI, boolean lentoI)
     {
@@ -153,17 +153,19 @@ public class Eventos
     {
         reloj = horaEvento;
         filaA++;
-        int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
-        int tamano = asignarTamano();         // Variable aleatoria discreta (1-64).        
+        int prioridad = asignarPrioridad();  // Variable aleatoria discreta.
+        int tamano = asignarTamano();        // Variable aleatoria discreta (1-64).        
         if(prioridad == 1)
         {
             filaAP1.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaAP1, comparador);
         }
         else
         {
             filaAP2.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaAP2, comparador);
         }        
         eventos[0] = reloj + proximoArriboA();// Próxima llegada de archivo a A.
     }
@@ -178,11 +180,13 @@ public class Eventos
         {
             filaBP1.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaBP1, comparador);
         }
         else
         {
             filaBP2.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaBP2, comparador);
         }        
         eventos[1] = reloj + proximoArriboB();// Próxima llegada de archivo a B.
     }
@@ -197,11 +201,13 @@ public class Eventos
         {
             filaCP1.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaCP1, comparador);
         }
         else
         {
             filaCP2.add(tamano);
             // Ordenar arreglo por tamaño
+            Collections.sort(filaCP2, comparador);
         }        
         eventos[2] = reloj + proximoArriboC();// Próxima llegada de archivo a C.
     }
