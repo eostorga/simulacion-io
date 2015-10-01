@@ -76,9 +76,9 @@ public class Eventos
     
     public void inicializarEventos()
     {
-        eventos[0] = reloj + proximoArriboA();
-        eventos[1] = reloj + proximoArriboB();
-        eventos[2] = reloj + proximoArriboC();
+        eventos[0] = reloj;
+        eventos[1] = reloj;
+        eventos[2] = reloj;
         eventos[3] = reloj + 5;
         for(int i = 4; i < 13; i++)
         {
@@ -89,10 +89,10 @@ public class Eventos
     
     public void iniciarSimulacion()
     {
-        if(lento){
+        if(lento)
+        {
             salida.setVisible(true);
-        }
-        
+        }        
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
@@ -127,19 +127,19 @@ public class Eventos
                         case 11: liberaLinea1(eventos[11]);
                                 break;
                         case 12: liberaLinea2(eventos[12]);
-                                break;
-                        
-                    }
-                   
+                                break;                        
+                    }                   
                 }
                 else 
                 {
                     // Ya no hay más eventos a realizarse, hay que terminar.
                     reloj = tiempoTotalSimulacion;
                 }
-                try {
+                try
+                {
                     salida.setValores();
-                } catch (InterruptedException ex) {
+                } catch (InterruptedException ex)
+                {
                     Logger.getLogger(Eventos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -152,7 +152,7 @@ public class Eventos
         int indice = -1;                // Un índice no existente.
         for(int i = 0; i < eventos.length; i++)
         {
-            if ( eventos[i] < menor)
+            if (eventos[i] < menor)
             {
                 menor = eventos[i];  // Devuelve el índice en el arreglo del evento.
                 indice = i;
@@ -168,7 +168,7 @@ public class Eventos
         reloj = horaEvento;
         filaA++;
         int prioridad = asignarPrioridad();  // Variable aleatoria discreta.
-        int tamano = asignarTamano();        // Variable aleatoria discreta (1-64).        
+        int tamano = asignarTamano();        // Variable aleatoria discreta (1-64).
         if(prioridad == 1)
         {
             filaAP1.add(tamano);
@@ -210,7 +210,7 @@ public class Eventos
         reloj = horaEvento;
         filaC++;
         int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
-        int tamano = asignarTamano();          // Variable aleatoria uniforme discreta (1-64).        
+        int tamano = 5;//asignarTamano();          // Variable aleatoria uniforme discreta (1-64).        
         if(prioridad == 1)
         {
             filaCP1.add(tamano);
@@ -873,7 +873,7 @@ public class Eventos
     
     public void llegadaAntivirus(double horaEvento)
     {
-        reloj = horaEvento;
+        reloj = horaEvento;        
         int probabilidadEnviar;
 
         if(libreAntivirus)
@@ -1211,8 +1211,8 @@ public class Eventos
     /**
      * Numeros aleatorios con distribucion exponencial con media de 5 segundos
      */
-    public double proximoArriboA(){
-        //CREO QUE ESTE ESTA BIEN ASI TENGO QUE VERIFICARLO
+    public double proximoArriboA()
+    {
         int lambda = 5;
         double x, r;
         r = m_random.nextDouble();
@@ -1221,13 +1221,12 @@ public class Eventos
     }
 
     /**
-     * Numeros aleatorios con distribucion f(x)=x/40 8<=x<=12
-     * ESTE ES EL QUE ME  HACE FALTA VER COMO SE HACE RICARDO
+     * Numeros aleatorios con distribucion f(x)=x/40 8 <= x <= 12
      */
     public double proximoArriboB()
     {
-        int x = m_random.nextInt(13);
-        double proximo = ((double)x)/40;
+        double r = m_random.nextDouble();
+        double proximo = Math.sqrt(40*r+64);
         return proximo;
     }
 
@@ -1246,10 +1245,5 @@ public class Eventos
     
     public static void main (String args [])
     {
-        Eventos simulacion;
-        int numeroVeces;            // Número de veces que se va a correr la simulación.
-        double tiempoTotal;         // Tiempo total en segundos para correr cada vez la simulación.
-        boolean modoLento = false;  // Si desea ver la simulación correr en modo lento o no.
-        double tiempoToken;         // El tiempo durante el cuál a cada máquina se le asigna el token.
     }
 }
