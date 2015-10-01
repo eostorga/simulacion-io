@@ -1,6 +1,5 @@
-package Simulacion;
+package io;
 import java.util.*;
-import javax.swing.JOptionPane;
 
 public class Eventos
 {
@@ -44,6 +43,7 @@ public class Eventos
     ArrayList<Integer> colaRouter = new ArrayList<>();
     Random m_random;
     Comparator<Integer> comparador = Collections.reverseOrder();
+    Salida salida; 
     
     public Eventos(int vecesI, double tiempoI, double tokenI, boolean lentoI)
     {
@@ -86,10 +86,18 @@ public class Eventos
     
     public void iniciarSimulacion()
     {
+        if(lento){
+            salida = new Salida(this);
+            salida.setVisible(true);
+        }
+        
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
+                for(int n = 0; n <100000; ++n){
+                
+                }
                 numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo). 
                 if(numeroEvento != -1)              // Solo para asegurarse que haya algún evento.
                 {
@@ -121,7 +129,9 @@ public class Eventos
                                 break;
                         case 12: liberaLinea2(eventos[12]);
                                 break;
+                        
                     }
+                    salida.setValores();
                 }
                 else 
                 {
