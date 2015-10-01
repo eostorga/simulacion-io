@@ -1,5 +1,7 @@
 package io;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Eventos
 {
@@ -82,12 +84,12 @@ public class Eventos
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
         }
+        salida = new Salida(this);
     }
     
     public void iniciarSimulacion()
     {
         if(lento){
-            salida = new Salida(this);
             salida.setVisible(true);
         }
         
@@ -95,9 +97,6 @@ public class Eventos
         {
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
-                for(int n = 0; n <100000; ++n){
-                
-                }
                 numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo). 
                 if(numeroEvento != -1)              // Solo para asegurarse que haya algún evento.
                 {
@@ -131,12 +130,17 @@ public class Eventos
                                 break;
                         
                     }
-                    salida.setValores();
+                   
                 }
                 else 
                 {
                     // Ya no hay más eventos a realizarse, hay que terminar.
                     reloj = tiempoTotalSimulacion;
+                }
+                try {
+                    salida.setValores();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Eventos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
