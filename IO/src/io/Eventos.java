@@ -250,7 +250,6 @@ public class Eventos
                     filaAP1.remove(i-1);
                     /* A termina poner en línea */
                     eventos[6] = reloj + tiempoTransferencia;
-                    //tiempo = tiempo - tiempoTransferencia;
                 }
                 
                 if(i >= filaAP1.size()) // Se acabó fila de prioridad 1
@@ -270,7 +269,6 @@ public class Eventos
                             filaAP2.remove(i-1);
                             /* A termina poner en línea */
                             eventos[6] = reloj + tiempoTransferencia;
-                            //tiempo = tiempo - tiempoTransferencia;
                         }
 
                         if(i >= filaAP2.size())
@@ -303,7 +301,6 @@ public class Eventos
                         filaAP2.remove(i-1);
                         /* A termina poner en línea */
                         eventos[6] = reloj + tiempoTransferencia;
-                        //tiempo = tiempo - tiempoTransferencia;
                     }
                     if(i >= filaAP2.size())
                     {
@@ -352,7 +349,6 @@ public class Eventos
                     filaBP1.remove(i-1);
                     /* B termina poner en línea */
                     eventos[7] = reloj + tiempoTransferencia;
-                    //tiempo = tiempo - tiempoTransferencia;
                 }
                 
                 if(i >= filaBP1.size()) // Se acabó fila de prioridad 1
@@ -366,13 +362,12 @@ public class Eventos
                             i++;
                         }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
 
-                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        if(tiempoTransferencia <= tiempo)
                         {
                             filaB -= 1;
                             filaBP2.remove(i-1);
                             /* B termina poner en línea */
                             eventos[7] = reloj + tiempoTransferencia;
-                            //tiempo = tiempo - tiempoTransferencia;
                         }
                         if(i >= filaBP2.size())
                         {
@@ -398,13 +393,12 @@ public class Eventos
                         i++;
                     }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
 
-                    if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                    if(tiempoTransferencia <= tiempo)
                     {
                         filaB -= 1;
                         filaBP2.remove(i-1);
                         /* B termina poner en línea */
                         eventos[7] = reloj + tiempoTransferencia;
-                        //tiempo = tiempo - tiempoTransferencia;
                     }
                     if(i >= filaBP2.size())
                     {
@@ -447,13 +441,12 @@ public class Eventos
                     i++;
                 }while(i < filaCP1.size() && tiempoTransferencia > tiempo);
                 
-                if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                if(tiempoTransferencia <= tiempo)
                 {
                     filaC -= 1;
                     filaCP1.remove(i-1);
                     /* C termina poner en línea */
                     eventos[8] = reloj + tiempoTransferencia;
-                    //tiempo = tiempo - tiempoTransferencia;
                 }
                 
                 if(i >= filaCP1.size()) // Se acabó fila de prioridad 1
@@ -467,13 +460,12 @@ public class Eventos
                             i++;
                         }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
 
-                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        if(tiempoTransferencia <= tiempo)
                         {
                             filaC -= 1;
                             filaCP2.remove(i-1);
                             /* C termina poner en línea */
                             eventos[8] = reloj + tiempoTransferencia;
-                            //tiempo = tiempo - tiempoTransferencia;
                         }
                         if(i >= filaCP2.size())
                         {
@@ -499,13 +491,12 @@ public class Eventos
                         i++;
                     }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
 
-                    if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                    if(tiempoTransferencia <= tiempo)
                     {
                         filaC -= 1;
                         filaCP2.remove(i-1);
                         /* C termina poner en línea */
                         eventos[8] = reloj + tiempoTransferencia;
-                        //tiempo = tiempo - tiempoTransferencia;
                     }
                     if(i >= filaCP2.size())
                     {
@@ -557,7 +548,6 @@ public class Eventos
                         filaAP1.remove(i-1);
                         /* A termina poner en línea */
                         eventos[6] = reloj + tiempoTransferencia;
-                        tiempo = tiempo - tiempoTransferencia;
                     }
                     
                     if(i >= filaAP1.size()) // Se acabó fila de prioridad 1
@@ -578,7 +568,6 @@ public class Eventos
                                 filaAP2.remove(i-1);
                                 /* A termina poner en línea */
                                 eventos[6] = reloj + tiempoTransferencia;
-                                tiempo = tiempo - tiempoTransferencia;
                             }
                             if(i >= filaAP2.size()) // Se acabó fila de prioridad 2
                             {
@@ -607,14 +596,13 @@ public class Eventos
                             i++;
                         }while(i < filaAP2.size() && tiempoTransferencia > tiempo);
 
-                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        if(tiempoTransferencia <= tiempo)
                         {
                             filaA -= 1;
                             tamanoArchv = filaAP2.get(i-1);
                             filaAP2.remove(i-1);
                             /* A termina poner en línea */
                             eventos[6] = reloj + tiempoTransferencia;
-                            tiempo = tiempo - tiempoTransferencia;
                         }
                         if(i >= filaAP2.size()) // Se acabó fila de prioridad 2
                         {
@@ -676,7 +664,6 @@ public class Eventos
                         filaBP1.remove(i-1);
                         /* B termina poner en línea */
                         eventos[7] = reloj + tiempoTransferencia;
-                        tiempo = tiempo - tiempoTransferencia;
                     }
                     
                     if(i >= filaBP1.size()) // Se acabó fila de prioridad 1
@@ -697,7 +684,6 @@ public class Eventos
                                 filaBP2.remove(i-1);
                                 /* B termina poner en línea */
                                 eventos[7] = reloj + tiempoTransferencia;
-                                tiempo = tiempo - tiempoTransferencia;
                             }
                             if(i >= filaBP2.size()) // Se acabó fila de prioridad 2
                             {
@@ -726,14 +712,13 @@ public class Eventos
                             i++;
                         }while(i < filaBP2.size() && tiempoTransferencia > tiempo);
 
-                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        if(tiempoTransferencia <= tiempo)
                         {
                             filaB -= 1;
                             tamanoArchv = filaBP2.get(i-1);
                             filaBP2.remove(i-1);
                             /* B termina poner en línea */
                             eventos[7] = reloj + tiempoTransferencia;
-                            tiempo = tiempo - tiempoTransferencia;
                         }
                         if(i >= filaBP2.size()) // Se acabó fila de prioridad 2
                         {
@@ -796,7 +781,6 @@ public class Eventos
                         filaCP1.remove(i-1);
                         /* C termina poner en línea */
                         eventos[8] = reloj + tiempoTransferencia;
-                        tiempo = tiempo - tiempoTransferencia;
                     }
                     
                     if(i >= filaCP1.size()) // Se acabó fila de prioridad 1
@@ -817,7 +801,6 @@ public class Eventos
                                 filaCP2.remove(i-1);
                                 /* C termina poner en línea */
                                 eventos[8] = reloj + tiempoTransferencia;
-                                tiempo = tiempo - tiempoTransferencia;
                             }
                             if(i >= filaCP2.size()) // Se acabó fila de prioridad 2
                             {
@@ -846,14 +829,13 @@ public class Eventos
                             i++;
                         }while(i < filaCP2.size() && tiempoTransferencia > tiempo);
 
-                        if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+                        if(tiempoTransferencia <= tiempo)
                         {
                             filaC -= 1;
                             tamanoArchv = filaCP2.get(i-1);
                             filaCP2.remove(i-1);
                             /* C termina poner en línea */
                             eventos[8] = reloj + tiempoTransferencia;
-                            tiempo = tiempo - tiempoTransferencia;
                         }
                         if(i >= filaCP2.size()) // Se acabó fila de prioridad 2
                         {
