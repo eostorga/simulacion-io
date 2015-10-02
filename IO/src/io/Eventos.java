@@ -46,7 +46,7 @@ public class Eventos
     boolean linea2 = true;              // Estado de la línea 2: libre u ocupada.
     boolean lento = false;              // Forma de mostrar la simulación.
     double[] eventos;                   // Arreglo principal para almacenar la hora de ocurrencia de los eventos.
-	// Estas colas almacenan los tamaños de los archivos.
+    // Estas colas almacenan los tamaños de los archivos.
     ArrayList<Integer> filaAP1 = new ArrayList<>(); // Cola de prioridad 1 de A.
     ArrayList<Integer> filaAP2 = new ArrayList<>(); // Cola de prioridad 2 de A.
     ArrayList<Integer> filaBP1 = new ArrayList<>(); // Cola de prioridad 1 de B.
@@ -79,7 +79,7 @@ public class Eventos
          * [11] -> Se libera línea 1
          * [12] -> Se libera línea 2
         */
-		// Datos ingresados por el usuario.
+	// Datos ingresados por el usuario.
         tiempoToken = tokenI;
         tiempoTotalSimulacion = tiempoI;
         vecesSimulacion = vecesI;
@@ -91,12 +91,12 @@ public class Eventos
     
     public void inicializarEventos()
     {
-		// Todas las máquinas reciben un archivo al inicio de la simulación.
+	// Todas las máquinas reciben un archivo al inicio de la simulación.
         eventos[0] = reloj;
         eventos[1] = reloj;
         eventos[2] = reloj;
         eventos[3] = reloj;
-		// Inicializa el resto como "infinitos" (los desprograma).
+	// Inicializa el resto como "infinitos" (los desprograma).
         for(int i = 4; i < 13; i++)
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
@@ -109,7 +109,7 @@ public class Eventos
         if(lento)
         {
             salida.setVisible(true);
-        }        
+        }
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
             reloj = 0 ;
@@ -157,7 +157,7 @@ public class Eventos
                     // Ya no hay más eventos a realizarse, hay que terminar.
                     reloj = tiempoTotalSimulacion;
                 }
-				// Muestra los datos en la simulación
+		// Muestra los datos en la simulación
                 try
                 {
                     salida.setValores();
@@ -166,13 +166,14 @@ public class Eventos
                     Logger.getLogger(Eventos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }            
-			// Calcula las estadísticas al final de cada corrida.
+            // Calcula las estadísticas al final de cada corrida.
             calcularEstadisticas(i);
+            if(lento)
+            {
+                salida.setVisible(false);
+            }
         }
         promedioColasFinal(vecesSimulacion);
-        if(lento){
-            salida.setVisible(false);
-        }
         estadisticas.mostrarEstadisticas(promedioColas, promedioEnviadosToken, promedioRevisiones);
         estadisticas.setVisible(true);
     }
@@ -1514,7 +1515,8 @@ public class Eventos
      * ColaAnt      | | |   | |
      * @param numeroCorrida 
      */
-    public void promedioColas(int numeroCorrida){
+    public void promedioColas(int numeroCorrida)
+    {
         colasFinales[0][numeroCorrida] = filaA ;
         colasFinales[1][numeroCorrida] = filaB ;
         colasFinales[2][numeroCorrida] = filaC ;
@@ -1525,16 +1527,19 @@ public class Eventos
      * Saca el promedio de la matriz de colasFinales de todas las corridas
      * 
      */
-    public void promedioColasFinal(int numeroCorridas){
+    public void promedioColasFinal(int numeroCorridas)
+    {
         double suma = 0;
-        for(int i=0 ; i<4 ; ++i){
-            for(int j =0 ; j<numeroCorridas ;++j){
+        for(int i=0 ; i<4 ; ++i)
+        {
+            for(int j =0 ; j<numeroCorridas ;++j)
+            {
                 suma += colasFinales[i][j];
             }
             promedioColas[i] = suma/numeroCorridas;
             suma = 0;
         }
-        System.out.println("Cola de A final");
+        /*System.out.println("Cola de A final");
         for(int i =0; i <numeroCorridas;++i){
             System.out.print(colasFinales[0][i]+" , ");
         }
@@ -1552,7 +1557,11 @@ public class Eventos
         System.out.println("Cola de Antivirus final");
         for(int i =0; i <numeroCorridas;++i){
             System.out.print(colasFinales[3][i]+" , ");
-        }
+        }*/        
+    }
+    
+    public void resetearVaraibles()
+    {
         
     }
 }
