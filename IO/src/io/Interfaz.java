@@ -116,7 +116,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void iniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarSimulacionActionPerformed
         // TODO add your handling code here:
-        int veces = Integer.parseInt(corridas.getText());
+       int veces = Integer.parseInt(corridas.getText());
         double time = Double.parseDouble(tiempo.getText());
         double tToken = Double.parseDouble(token.getText());
         boolean estadoLento = lento.getState();
