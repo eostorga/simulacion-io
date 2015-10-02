@@ -112,6 +112,8 @@ public class Eventos
         }        
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
+            reloj = 0 ;
+            inicializarEventos();
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
                 numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo). 
@@ -1531,6 +1533,25 @@ public class Eventos
             }
             promedioColas[i] = suma/numeroCorridas;
             suma = 0;
+        }
+        System.out.println("Cola de A final");
+        for(int i =0; i <numeroCorridas;++i){
+            System.out.print(colasFinales[0][i]+" , ");
+        }
+        System.out.println();
+            System.out.println("Cola de B final");
+        for(int i =0; i <numeroCorridas;++i){
+            System.out.print(colasFinales[1][i]+" , ");
+        }
+        System.out.println();
+        System.out.println("Cola de C final");
+        for(int i =0; i <numeroCorridas;++i){
+            System.out.print(colasFinales[2][i]+" , ");
+        }
+        System.out.println();
+        System.out.println("Cola de Antivirus final");
+        for(int i =0; i <numeroCorridas;++i){
+            System.out.print(colasFinales[3][i]+" , ");
         }
         
     }
