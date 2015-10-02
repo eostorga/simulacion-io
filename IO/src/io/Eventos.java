@@ -42,16 +42,17 @@ public class Eventos
     boolean enviar = false;             // Bandera para determinar si un archivo se envía desde el antivirus.
     boolean linea1 = true;              // Estado de la línea 1: libre u ocupada.
     boolean linea2 = true;              // Estado de la línea 2: libre u ocupada.
-    boolean lento = false;              //
-    double[] eventos;                   //
-    ArrayList<Integer> filaAP1 = new ArrayList<>();
-    ArrayList<Integer> filaAP2 = new ArrayList<>();
-    ArrayList<Integer> filaBP1 = new ArrayList<>();
-    ArrayList<Integer> filaBP2 = new ArrayList<>();
-    ArrayList<Integer> filaCP1 = new ArrayList<>();
-    ArrayList<Integer> filaCP2 = new ArrayList<>();
-    ArrayList<Integer> colaAntivirus = new ArrayList<>();
-    ArrayList<Integer> colaRouter = new ArrayList<>();
+    boolean lento = false;              // Forma de mostrar la simulación.
+    double[] eventos;                   // Arreglo principal para almacenar la hora de ocurrencia de los eventos.
+	// Estas colas almacenan los tamaños de los archivos.
+    ArrayList<Integer> filaAP1 = new ArrayList<>(); // Cola de prioridad 1 de A.
+    ArrayList<Integer> filaAP2 = new ArrayList<>(); // Cola de prioridad 2 de A.
+    ArrayList<Integer> filaBP1 = new ArrayList<>(); // Cola de prioridad 1 de B.
+    ArrayList<Integer> filaBP2 = new ArrayList<>(); // Cola de prioridad 2 de B.
+    ArrayList<Integer> filaCP1 = new ArrayList<>(); // Cola de prioridad 1 de C.
+    ArrayList<Integer> filaCP2 = new ArrayList<>(); // Cola de prioridad 2 de C.
+    ArrayList<Integer> colaAntivirus = new ArrayList<>(); // Cola del antivirus.
+    ArrayList<Integer> colaRouter = new ArrayList<>();	  // Cola del router.
     Random m_random;
     Comparator<Integer> comparador = Collections.reverseOrder();
     Salida salida; 
