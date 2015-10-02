@@ -9,9 +9,13 @@ public class Eventos
      */
     
     // Promedio de archivos enviados por cada turno del token. LISTO
-    int promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR
+    double promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR
     int contadorPorToken;
     ArrayList<Integer> cantPorToken = new ArrayList<>();
+    
+    // Número promedio de revisiones del antivirus por archivo. LISTO
+    double promedioRevisiones;
+    ArrayList<Integer> cantRevArchv = new ArrayList<>();
     
     /**
      * 
@@ -919,7 +923,6 @@ public class Eventos
                 if(probabilidadEnviar == 2)
                 {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16));
-
                 }
                 if(probabilidadEnviar == 3)
                 {
@@ -1102,18 +1105,22 @@ public class Eventos
         if(i < 950000)
         {
             j = 1;
+            cantRevArchv.add(1); // Se hizo una revisión.
         }
         if(i >= 950000 && i < 997500)
         {
             j = 2;
+            cantRevArchv.add(2); // Se hicieron dos revisiones.
         }
         if(i >= 997500 && i < 999875)
         {
             j = 3;
+            cantRevArchv.add(3); // Se hicieron tres revisiones.
         }
         if(i >= 999875 && i < 1000000)
         {
             j = 4;
+            cantRevArchv.add(3); // Se hicieron tres revisiones.
         }
         return j;
     }
@@ -1271,9 +1278,10 @@ public class Eventos
     public void calcularEstadisticas()
     {
         promedioEnviadosToken = promedioEnviadosPorToken();
+        promedioRevisiones = promedioRevisionesPorArchivo();
     }
     
-    public int promedioEnviadosPorToken()
+    public double promedioEnviadosPorToken()
     {
         int total = 0;
         for(int i = 0; i < cantPorToken.size(); i++)
@@ -1281,5 +1289,16 @@ public class Eventos
             total += cantPorToken.get(i);
         }
         return total/cantPorToken.size();
+    }
+    
+    public double promedioRevisionesPorArchivo()
+    {
+        double total = 0;
+        for(int i = 0; i < cantRevArchv.size(); i++)
+        {
+            total += (double) cantRevArchv.get(i);
+        }
+        System.out.println(total);
+        return total/((double)cantRevArchv.size());
     }
 }
