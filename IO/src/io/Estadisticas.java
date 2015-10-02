@@ -98,12 +98,15 @@ public class Estadisticas extends javax.swing.JFrame {
         });
     }
     
-    public void mostrarEstadisticas(int[] colas){
+    public void mostrarEstadisticas(double[] colas, double promedioToken, double revisiones){
         m_consola.insert("Promedio de colas\n", 0);
         m_consola.append("Promedio de cola A:\n     "+colas[0]);
         m_consola.append("Promedio de cola B:\n     "+colas[1]);
         m_consola.append("Promedio de cola C:\n     "+colas[2]);
         m_consola.append("Promedio de cola D:\n     "+colas[3]);
+        m_consola.append("Promedio de archivos enviados por cada turno del token\n     "+promedioToken);
+        m_consola.append("Número promedio de revisiones del antivirus por archivo\n     "+revisiones);
+        
 
     }
 
