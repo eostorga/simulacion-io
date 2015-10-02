@@ -13,6 +13,8 @@ public class Eventos
     // Promedio de archivos enviados por cada turno del token. LISTO.
     double promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR.
     int contadorPorToken;
+    double promedioColas [] = new double [4]; //Para promedio de colas al finalizar la simulacion
+    double colasFinales[][]; //Guardara las colas de A B C y Antivirus al finalizar simulacion
     ArrayList<Integer> cantPorToken = new ArrayList<>();
     // Número promedio de revisiones del antivirus por archivo. LISTO.
     double promedioRevisiones; // ESTO ES LO QUE HAY QUE MOSTRAR.
@@ -81,6 +83,7 @@ public class Eventos
         tiempoTotalSimulacion = tiempoI;
         vecesSimulacion = vecesI;
         lento = lentoI;
+        colasFinales = new double [4][vecesI];
         m_random = new Random();
         inicializarEventos();
     }
@@ -160,9 +163,11 @@ public class Eventos
                     Logger.getLogger(Eventos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
 			// Calcula las estadísticas al final de cada corrida.
-            calcularEstadisticas();
+            calcularEstadisticas(i);
         }
+        promedioColasFinal(vecesSimulacion);
     }
     
 	// El próximo evento a ejecutarse será aquel cuya hora de ocurrencia se la menor de todos los eventos.
@@ -1358,10 +1363,11 @@ public class Eventos
     
     /************************ CÁLCULO DE ESTADÍSTICAS *************************/
     
-    public void calcularEstadisticas()
+    public void calcularEstadisticas(int numeroCorrida)
     {
         promedioEnviadosToken = promedioEnviadosPorToken();
         promedioRevisiones = promedioRevisionesPorArchivo();
+        promedioColas(numeroCorrida);
     }
     
     public double promedioEnviadosPorToken()
@@ -1382,5 +1388,36 @@ public class Eventos
             total += (double) cantRevArchv.get(i);
         }
         return total/((double)cantRevArchv.size());
+    }
+    
+    /**
+     *      NCorrida 1 2 ... n
+     * ColaA        | | |   | |
+     * ColaB        | | |   | |
+     * ColaC        | | |   | |
+     * ColaAnt      | | |   | |
+     * @param numeroCorrida 
+     */
+    public void promedioColas(int numeroCorrida){
+        colasFinales[0][numeroCorrida] = filaA ;
+        colasFinales[1][numeroCorrida] = filaB ;
+        colasFinales[2][numeroCorrida] = filaC ;
+        colasFinales[3][numeroCorrida] = filaAntivirus ;
+    }
+    
+    /**
+     * Saca el promedio de la matriz de colasFinales de todas las corridas
+     * 
+     */
+    public void promedioColasFinal(int numeroCorridas){
+        double suma = 0;
+        for(int i=0 ; i<4 ; ++i){
+            for(int j =0 ; j<numeroCorridas ;++j){
+                suma += colasFinales[i][j];
+            }
+            promedioColas[i] = suma/numeroCorridas;
+            suma = 0;
+        }
+        
     }
 }
