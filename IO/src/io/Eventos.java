@@ -1326,7 +1326,7 @@ public class Eventos
      */
     public double proximoArriboA()
     {
-        int lambda = 0.04;
+        double lambda = 0.04;
         double x, r;
         r = m_random.nextDouble();
         x = ((-Math.log(1-r))/lambda);
