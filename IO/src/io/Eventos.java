@@ -5,8 +5,12 @@ import java.util.logging.Logger;
 
 public class Eventos
 {
-    /** Para estadísticas
-     */
+    /************************ Variables para estadísticas *********************/
+    
+    int archivosEnviados;       // Total de archivos salidos del antivirus.
+    int archivosNoEnviados;     // Total de archivo no enviados por el antivirus.
+    int enviadosL1;             // Archivos envíados por la línea 1.
+    int enviadosL2;             // Archivos envíados por la línea 2.
     
     // Promedio de archivos enviados por cada turno del token. LISTO
     double promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR
@@ -14,7 +18,7 @@ public class Eventos
     ArrayList<Integer> cantPorToken = new ArrayList<>();
     
     // Número promedio de revisiones del antivirus por archivo. LISTO
-    double promedioRevisiones;
+    double promedioRevisiones; // ESTO ES LO QUE HAY QUE MOSTRAR
     ArrayList<Integer> cantRevArchv = new ArrayList<>();
     
     /**
@@ -37,10 +41,6 @@ public class Eventos
     int tamArchvLibera;                 //
     int tamArchvL1;                     //
     int tamArchvL2;                     //
-    int archivosEnviados;               //
-    int archivosNoEnviados;             //
-    int enviadosL1;                     //
-    int enviadosL2;                     //
     int tieneToken;                     //
     double duracionTotalRevision;       //
     double duracionTransmisionL1;       //
