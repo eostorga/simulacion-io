@@ -5,51 +5,43 @@ import java.util.logging.Logger;
 
 public class Eventos
 {
-    /************************ Variables para estadísticas *********************/
-    
+    /************************ Variables para estadísticas *********************/   
     int archivosEnviados;       // Total de archivos salidos del antivirus.
     int archivosNoEnviados;     // Total de archivo no enviados por el antivirus.
     int enviadosL1;             // Archivos envíados por la línea 1.
     int enviadosL2;             // Archivos envíados por la línea 2.
-    
-    // Promedio de archivos enviados por cada turno del token. LISTO
-    double promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR
+    // Promedio de archivos enviados por cada turno del token. LISTO.
+    double promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR.
     int contadorPorToken;
     ArrayList<Integer> cantPorToken = new ArrayList<>();
-    
-    // Número promedio de revisiones del antivirus por archivo. LISTO
-    double promedioRevisiones; // ESTO ES LO QUE HAY QUE MOSTRAR
-    ArrayList<Integer> cantRevArchv = new ArrayList<>();
-    
-    /**
-     * 
-     */
-    
-    
-    double reloj = 0;                   //
+    // Número promedio de revisiones del antivirus por archivo. LISTO.
+    double promedioRevisiones; // ESTO ES LO QUE HAY QUE MOSTRAR.
+    ArrayList<Integer> cantRevArchv = new ArrayList<>();    
+    /**************************************************************************/
+    double reloj = 0;                   // Reloj de la simulación.
     double tiempoTotalSimulacion;       // Tiempo total en segundos para correr cada vez la simulación.
-    double tiempo;                      //
-    double tiempoToken;                 //
+    double tiempo;                      // Tiempo de token que tiene cada máquina.
+    double tiempoToken;                 // El tiempo de token que asigna el usuario.
     int vecesSimulacion;                // Número de veces que se va a correr la simulación.
-    int numeroEvento;                   //
-    int filaA;                          //
-    int filaB;                          //
-    int filaC;                          //
-    int filaAntivirus;                  //
-    int filaRouter;                     //
-    int tamanoArchv;                    //
-    int tamArchvLibera;                 //
-    int tamArchvL1;                     //
-    int tamArchvL2;                     //
-    int tieneToken;                     //
-    double duracionTotalRevision;       //
-    double duracionTransmisionL1;       //
-    double duracionTransmisionL2;       //
-    double tiempoTransferencia;         //
-    boolean libreAntivirus = true;      //
-    boolean enviar = false;             //
-    boolean linea1 = true;              //
-    boolean linea2 = true;              //
+    int numeroEvento;                   // Identificador del evento que está siendo procesado.
+    int filaA;                          // Contador de archivos llegados a A.
+    int filaB;                          // Contador de archivos llegados a B.
+    int filaC;                          // Contador de archivos llegados a C.
+    int filaAntivirus;                  // Contador de la fila del antivirus.
+    int filaRouter;                     // Contador de la fila del router.
+    int tamanoArchv;                    // Guarda el tamaño del archivo que será enviado al antivirus.
+    int tamArchvLibera;                 // Guarda el tamaño del archivo que saldrá del antivirus.
+    int tamArchvL1;                     // Guarda el tamaño del archivo que será enviado por la línea 1.
+    int tamArchvL2;                     // Guarda el tamaño del archivo que será enviado por la línea 2.
+    int tieneToken;                     // Identificador de la máquina que tiene el token en un momento dado.
+    double duracionTotalRevision;       // Tiempo que dura la revisión total de un archivo en el antivirus.
+    double duracionTransmisionL1;       // Tiempo que dura transmitiéndose un archivo por la línea 1.
+    double duracionTransmisionL2;       // Tiempo que dura transmitiéndose un archivo por la línea 2.
+    double tiempoTransferencia;         // Tiempo que dura transmitiéndose un archivo al antivirus.
+    boolean libreAntivirus = true;      // Estado del antivirus: libre u ocupado.
+    boolean enviar = false;             // Bandera para determinar si un archivo se envía desde el antivirus.
+    boolean linea1 = true;              // Estado de la línea 1: libre u ocupada.
+    boolean linea2 = true;              // Estado de la línea 2: libre u ocupada.
     boolean lento = false;              //
     double[] eventos;                   //
     ArrayList<Integer> filaAP1 = new ArrayList<>();
