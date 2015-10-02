@@ -58,6 +58,7 @@ public class Eventos
     Random m_random;
     Comparator<Integer> comparador = Collections.reverseOrder();
     Salida salida; 
+    Estadisticas estadisticas = new Estadisticas();
     
     public Eventos(int vecesI, double tiempoI, double tokenI, boolean lentoI)
     {
@@ -167,6 +168,11 @@ public class Eventos
             calcularEstadisticas(i);
         }
         promedioColasFinal(vecesSimulacion);
+        if(lento){
+            salida.setVisible(false);
+        }
+        estadisticas.mostrarEstadisticas(promedioColas, promedioEnviadosToken, promedioRevisiones);
+        estadisticas.setVisible(true);
     }
     
 	// El próximo evento a ejecutarse será aquel cuya hora de ocurrencia se la menor de todos los eventos.
