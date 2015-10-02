@@ -76,6 +76,7 @@ public class Eventos
          * [11] -> Se libera línea 1
          * [12] -> Se libera línea 2
         */
+		// Datos ingresados por el usuario.
         tiempoToken = tokenI;
         tiempoTotalSimulacion = tiempoI;
         vecesSimulacion = vecesI;
@@ -86,10 +87,12 @@ public class Eventos
     
     public void inicializarEventos()
     {
+		// Todas las máquinas reciben un archivo al inicio de la simulación.
         eventos[0] = reloj;
         eventos[1] = reloj;
         eventos[2] = reloj;
         eventos[3] = reloj + 5;
+		// Inicializa el resto como "infinitos" (los desprograma).
         for(int i = 4; i < 13; i++)
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
@@ -148,6 +151,7 @@ public class Eventos
                     // Ya no hay más eventos a realizarse, hay que terminar.
                     reloj = tiempoTotalSimulacion;
                 }
+				// Muestra los datos en la simulación
                 try
                 {
                     salida.setValores();
@@ -156,14 +160,16 @@ public class Eventos
                     Logger.getLogger(Eventos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+			// Calcula las estadísticas al final de cada corrida.
             calcularEstadisticas();
         }
     }
     
+	// El próximo evento a ejecutarse será aquel cuya hora de ocurrencia se la menor de todos los eventos.
     public int proximoEvento()
     {
-        double menor = Double.MAX_VALUE;  // Un número muy grande cualquiera.
-        int indice = -1;                // Un índice no existente.
+        double menor = Double.MAX_VALUE;  	// Un número muy grande cualquiera.
+        int indice = -1;                	// Un índice no existente.
         for(int i = 0; i < eventos.length; i++)
         {
             if (eventos[i] < menor)
@@ -183,16 +189,18 @@ public class Eventos
         filaA++;
         int prioridad = asignarPrioridad();  // Variable aleatoria discreta.
         int tamano = asignarTamano();        // Variable aleatoria discreta (1-64).
-        if(prioridad == 1)
+        // Archivos de prioridad 1 se agregan a la respectiva cola
+		if(prioridad == 1)
         {
             filaAP1.add(tamano);
-            // Ordenar arreglo por tamaño
+            // Ordena cola por tamaño de archivo, de mayor a menor
             Collections.sort(filaAP1, comparador);
         }
+		// Archivos de prioridad 2 se agregan a la respectiva cola
         else
         {
             filaAP2.add(tamano);
-            // Ordenar arreglo por tamaño
+            // Ordena cola por tamaño de archivo, de mayor a menor
             Collections.sort(filaAP2, comparador);
         }        
         eventos[0] = reloj + proximoArriboA();// Próxima llegada de archivo a A.
@@ -204,16 +212,18 @@ public class Eventos
         filaB++;
         int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
         int tamano = asignarTamano();         // Variable aleatoria discreta (1-64).        
-        if(prioridad == 1)
+        // Archivos de prioridad 1 se agregan a la respectiva cola
+		if(prioridad == 1)
         {
             filaBP1.add(tamano);
-            // Ordenar arreglo por tamaño
+            // Ordena cola por tamaño de archivo, de mayor a menor
             Collections.sort(filaBP1, comparador);
         }
+		// Archivos de prioridad 2 se agregan a la respectiva cola
         else
         {
             filaBP2.add(tamano);
-            // Ordenar arreglo por tamaño
+            // Ordena cola por tamaño de archivo, de mayor a menor
             Collections.sort(filaBP2, comparador);
         }        
         eventos[1] = reloj + proximoArriboB();// Próxima llegada de archivo a B.
@@ -225,16 +235,18 @@ public class Eventos
         filaC++;
         int prioridad = asignarPrioridad();      // Variable aleatoria discreta.
         int tamano = 5;//asignarTamano();          // Variable aleatoria uniforme discreta (1-64).        
-        if(prioridad == 1)
+        // Archivos de prioridad 1 se agregan a la respectiva cola
+		if(prioridad == 1)
         {
             filaCP1.add(tamano);
-            // Ordenar arreglo por tamaño
+            // Ordena cola por tamaño de archivo, de mayor a menor
             Collections.sort(filaCP1, comparador);
         }
+		// Archivos de prioridad 2 se agregan a la respectiva cola
         else
         {
             filaCP2.add(tamano);
-            // Ordenar arreglo por tamaño
+            // Ordena cola por tamaño de archivo, de mayor a menor
             Collections.sort(filaCP2, comparador);
         }        
         eventos[2] = reloj + proximoArriboC();// Próxima llegada de archivo a C.
@@ -244,8 +256,14 @@ public class Eventos
     {
         reloj = horaEvento;
         tieneToken = 1; // A tiene token.
+		/*
+		Cada vez que una máquina recibe el token guarda el contador de archivos enviados
+		anteriormente en un vector y lo reinicia, para empezar a contar cuántos enviará.
+		Y así poder sacar el promedio de archivos enviados cada vez que se tiene el token.	
+		*/
         cantPorToken.add(contadorPorToken);
         contadorPorToken = 0;
+		/**/
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -254,13 +272,18 @@ public class Eventos
         {
             if(filaAP1.size() > 0)
             {
+				/** Se calcula el tiempo de transferencia de un archivo en la cola
+				si este se puede enviar en el tiempo de token que se tiene, se escoge
+				y sale del ciclo, si no, se continua con el siguiente.
+				*/
                 do
                 {    
                     tiempoTransferencia = filaAP1.get(i) * 0.25;
                     i++;
                 }while(i < filaAP1.size() && tiempoTransferencia > tiempo);
                 
-                if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+				// Si da tiempo de enviar ese archivo, se saca dse la cola y se envía.
+                if(tiempoTransferencia <= tiempo)
                 {
                     filaA -= 1;
                     filaAP1.remove(i-1);
@@ -345,6 +368,11 @@ public class Eventos
     {
         reloj = horaEvento;
         tieneToken = 2; // B tiene token.
+		/*
+		Cada vez que una máquina recibe el token guarda el contador de archivos enviados
+		anteriormente en un vector y lo reinicia, para empezar a contar cuántos enviará.
+		Y así poder sacar el promedio de archivos enviados cada vez que se tiene el token.	
+		*/
         cantPorToken.add(contadorPorToken);
         contadorPorToken = 0;
         tiempo = tiempoToken;
@@ -355,13 +383,18 @@ public class Eventos
         {
             if(filaBP1.size() > 0)
             {
+				/** Se calcula el tiempo de transferencia de un archivo en la cola
+				si este se puede enviar en el tiempo de token que se tiene, se escoge
+				y sale del ciclo, si no, se continua con el siguiente.
+				*/			
                 do
                 {    
                     tiempoTransferencia = filaBP1.get(i) * 0.25;
                     i++;
                 }while(i < filaBP1.size() && tiempoTransferencia > tiempo);
                 
-                if(tiempoTransferencia <= tiempo) // Si sale del ciclo porque va a enviar un archivo
+				// Si da tiempo de enviar ese archivo, se saca dse la cola y se envía.
+                if(tiempoTransferencia <= tiempo)
                 {
                     filaB -= 1;
                     filaBP1.remove(i-1);
@@ -445,7 +478,12 @@ public class Eventos
     {
         reloj = horaEvento;
         tieneToken = 3; // C tiene token.
-        cantPorToken.add(contadorPorToken);
+		/*
+		Cada vez que una máquina recibe el token guarda el contador de archivos enviados
+		anteriormente en un vector y lo reinicia, para empezar a contar cuántos enviará.
+		Y así poder sacar el promedio de archivos enviados cada vez que se tiene el token.	
+		*/        
+		cantPorToken.add(contadorPorToken);
         contadorPorToken = 0;
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
@@ -455,12 +493,17 @@ public class Eventos
         {
             if(filaCP1.size() > 0)
             {
+				/** Se calcula el tiempo de transferencia de un archivo en la cola
+				si este se puede enviar en el tiempo de token que se tiene, se escoge
+				y sale del ciclo, si no, se continua con el siguiente.
+				*/			
                 do
                 {    
                     tiempoTransferencia = filaCP1.get(i) * 0.25;
                     i++;
                 }while(i < filaCP1.size() && tiempoTransferencia > tiempo);
                 
+				// Si da tiempo de enviar ese archivo, se saca dse la cola y se envía.
                 if(tiempoTransferencia <= tiempo)
                 {
                     filaC -= 1;
@@ -549,8 +592,13 @@ public class Eventos
         eventos[9] = reloj + 1;
         int i = 0;
         
+		/* Si la máquina todavía tiene tiempo de token escoge otro archivo de la cola
+		y para determinar si lo puede enviar dado su tamaño.
+		Si no tiene más tiempo pasa el token a la siguiente máquina.
+		*/
         if(tiempo != 0)
         {
+			/* Si le queda tiempo, pero no tiene archivos en cola pasa el token. */
             if(filaA != 0)
             {
                 if(filaAP1.size() > 0)
@@ -665,8 +713,13 @@ public class Eventos
         eventos[9] = reloj + 1;
         int i = 0;
         
+		/* Si la máquina todavía tiene tiempo de token escoge otro archivo de la cola
+		y para determinar si lo puede enviar dado su tamaño.
+		Si no tiene más tiempo pasa el token a la siguiente máquina.
+		*/		
         if(tiempo != 0)
         {
+			/* Si le queda tiempo, pero no tiene archivos en cola pasa el token. */
             if(filaB != 0)
             {
                 if(filaBP1.size() > 0)
@@ -781,9 +834,14 @@ public class Eventos
         /* Llegar a antivirus = reloj + 1; */
         eventos[9] = reloj + 1;
         int i = 0;
-        
+
+		/* Si la máquina todavía tiene tiempo de token escoge otro archivo de la cola
+		y para determinar si lo puede enviar dado su tamaño.
+		Si no tiene más tiempo pasa el token a la siguiente máquina.
+		*/        
         if(tiempo != 0)
         {
+			/* Si le queda tiempo, pero no tiene archivos en cola pasa el token. */
             if(filaC != 0)
             {
                 if(filaCP1.size() > 0)
@@ -895,7 +953,10 @@ public class Eventos
     {
         reloj = horaEvento;        
         int probabilidadEnviar;
-
+	
+		/* Si un archivo llega al antivirus y lo encuentra libre procede a hacer la revisión.
+		Si no, se agrega a la cola.
+		*/
         if(libreAntivirus)
         {
             libreAntivirus = false;
@@ -903,25 +964,30 @@ public class Eventos
             /* Se genera la bandera de envío y duración total de revisión */
             if(probabilidadEnviar == 4)
             {
+				/*Luego de tres revisiones al archivo se le detectó virus, por lo que no se envía.*/
                 enviar = false;
                 duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
             }
             else
             {
                 enviar = true;
+				/*Luego de una revisión no se le encontró virus al archivo, por lo que se envía.*/
                 if(probabilidadEnviar == 1)
                 {
                     duracionTotalRevision = tamanoArchv/8;
                 }
+				/*Luego de dos revisiones no se le encontró virus al archivo, por lo que se envía.*/
                 if(probabilidadEnviar == 2)
                 {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16));
                 }
+				/*Luego de tres revisiones no se le encontró virus al archivo, por lo que se envía.*/
                 if(probabilidadEnviar == 3)
                 {
                     duracionTotalRevision = ((tamanoArchv/8)+(tamanoArchv/16)+(tamanoArchv/24));
                 }
             }
+			// Se pasa el tamaño de dicho archivo para su posterior uso y así no caerle encima.
             tamArchvLibera = tamanoArchv;
             /* Se libera antivirus */
             eventos[10] = reloj + duracionTotalRevision;
@@ -941,9 +1007,14 @@ public class Eventos
         int probabilidadEnviar;
         int tamArchvLibera2;
         
+		/* Si se determina que el archivo no contenía virus luego de las revisiones
+		se puede enviar mediante el router.
+		*/
         if(enviar)
         {
+			// Cuento cuántos archivos fueron enviados, es decir, aprobaron las revisiones.
             archivosEnviados++;
+			// Si ambas líneas están desocupadas se escoge cualquiera.
             if(linea1 && linea2)
             {
                 int linea = escogerLinea(); // Escoge cuál línea agarra
@@ -966,6 +1037,7 @@ public class Eventos
                     eventos[12] = reloj + duracionTransmisionL2;
                 }
             }
+			// Si solo una está desocupada, se revisa cuál es.
             else
             {
                 if(linea1)
@@ -988,6 +1060,7 @@ public class Eventos
                         /* Se libera línea 2 */
                         eventos[12] = reloj + duracionTransmisionL2;
                     }
+					// Si ninguna línea estaba desocupada se aumenta la "cola del router".
                     else
                     {
                         filaRouter++;
@@ -998,33 +1071,44 @@ public class Eventos
         }
         else
         {
+			// Se cuenta cuántos archivos no fueron enviados, es decir, no pasaron la prueba.
             archivosNoEnviados++;
         }
+		/*
+		Una vez que se envia o no el archivo, se procede a tomar el siguiente archivo en cola.
+		Si no hay, se libera el antivirus.
+		*/
         if(filaAntivirus != 0)
         {
             libreAntivirus = false;
+			// Se toma el tamaño del siguiente archivo para calcular su tiempo de revisión.
             tamArchvLibera2 = colaAntivirus.get(0);
+			// Se reduce la fila del antivirus.
             colaAntivirus.remove(0);
             filaAntivirus--;
             probabilidadEnviar = tieneVirus(); // Variable aleatoria para decidir si se descarta o se envía.
             /* Se genera la bandera de envío y duración total de revisión */
             if(probabilidadEnviar == 4)
             {
+				/*Luego de tres revisiones al archivo se le detectó virus, por lo que no se envía.*/
                 enviar = false;
                 duracionTotalRevision = ((tamArchvLibera2/8)+(tamArchvLibera2/16)+(tamArchvLibera2/24));
             }
             else
             {
                 enviar = true;
+				/*Luego de una revisión no se le encontró virus al archivo, por lo que se envía.*/
                 if(probabilidadEnviar == 1)
                 {
                     duracionTotalRevision = tamArchvLibera2/8;
                 }
+				/*Luego de dos revisiones no se le encontró virus al archivo, por lo que se envía.*/
                 if(probabilidadEnviar == 2)
                 {
                     duracionTotalRevision = ((tamArchvLibera2/8)+(tamArchvLibera2/16));
 
                 }
+				/*Luego de tres revisiones no se le encontró virus al archivo, por lo que se envía.*/
                 if(probabilidadEnviar == 3)
                 {
                     duracionTotalRevision = ((tamArchvLibera2/8)+(tamArchvLibera2/16)+(tamArchvLibera2/24));
@@ -1045,10 +1129,12 @@ public class Eventos
     {
         reloj = horaEvento;
         
+		/*Si al liberarse la línea hay más archivos en cola, toma el siguiente.*/
         if(filaRouter != 0)
         {
             enviadosL1++;
             linea1 = false;
+			// Se toma el tamaño del archivo para calcular su tiempo de transmisión.
             tamArchvL1 = colaRouter.get(0);
             filaRouter--;
             colaRouter.remove(0);
@@ -1056,6 +1142,7 @@ public class Eventos
             /* Se libera línea 1 */
             eventos[11] = reloj + duracionTransmisionL1;
         }
+		/*Si no, se libera*/
         else
         {
             linea1 = true;
@@ -1067,10 +1154,12 @@ public class Eventos
     {
         reloj = horaEvento;
         
+		/*Si al liberarse la línea hay más archivos en cola, toma el siguiente.*/
         if(filaRouter != 0)
         {
             enviadosL2++;
             linea2 = false;
+			// Se toma el tamaño del archivo para calcular su tiempo de transmisión.
             tamArchvL2 = colaRouter.get(0);
             filaRouter--;
             colaRouter.remove(0);
@@ -1078,6 +1167,7 @@ public class Eventos
             /* Se libera línea 2 */
             eventos[12] = reloj + duracionTransmisionL2;
         }
+		/*Si no, se libera*/
         else
         {
             linea2 = true;
@@ -1098,22 +1188,22 @@ public class Eventos
         if(i < 950000)
         {
             j = 1;
-            cantRevArchv.add(1); // Se hizo una revisión.
+            cantRevArchv.add(1); // Se hace una revisión.
         }
         if(i >= 950000 && i < 997500)
         {
             j = 2;
-            cantRevArchv.add(2); // Se hicieron dos revisiones.
+            cantRevArchv.add(2); // Se hacen dos revisiones.
         }
         if(i >= 997500 && i < 999875)
         {
             j = 3;
-            cantRevArchv.add(3); // Se hicieron tres revisiones.
+            cantRevArchv.add(3); // Se hacen tres revisiones.
         }
         if(i >= 999875 && i < 1000000)
         {
             j = 4;
-            cantRevArchv.add(3); // Se hicieron tres revisiones.
+            cantRevArchv.add(3); // Se hacen tres revisiones.
         }
         return j;
     }
@@ -1232,11 +1322,11 @@ public class Eventos
     }
     
     /**
-     * Numeros aleatorios con distribucion exponencial con media de 5 segundos
+     * Numeros aleatorios con distribucion exponencial con media de 1/25 segundos
      */
     public double proximoArriboA()
     {
-        int lambda = 5;
+        int lambda = 0.04;
         double x, r;
         r = m_random.nextDouble();
         x = ((-Math.log(1-r))/lambda);
