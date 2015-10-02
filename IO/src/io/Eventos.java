@@ -5,6 +5,19 @@ import java.util.logging.Logger;
 
 public class Eventos
 {
+    /** Para estadísticas
+     */
+    
+    // Promedio de archivos enviados por cada turno del token. LISTO
+    int promedioEnviadosToken; // ESTO ES LO QUE HAY QUE MOSTRAR
+    int contadorPorToken;
+    ArrayList<Integer> cantPorToken = new ArrayList<>();
+    
+    /**
+     * 
+     */
+    
+    
     double reloj = 0;                   //
     double tiempoTotalSimulacion;       // Tiempo total en segundos para correr cada vez la simulación.
     double tiempo;                      //
@@ -115,10 +128,13 @@ public class Eventos
                         case 5: CRecibeToken(eventos[5]);
                                 break;
                         case 6: ATerminaPonerLinea(eventos[6]);
+                                contadorPorToken++; // Para estadísticas
                                 break;
                         case 7: BTerminaPonerLinea(eventos[7]);
+                                contadorPorToken++; // Para estadísticas
                                 break;
                         case 8: CTerminaPonerLinea(eventos[8]);
+                                contadorPorToken++; // Para estadísticas
                                 break;
                         case 9: llegadaAntivirus(eventos[9]);
                                 break;
@@ -143,6 +159,7 @@ public class Eventos
                     Logger.getLogger(Eventos.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            calcularEstadisticas();
         }
     }
     
@@ -230,6 +247,8 @@ public class Eventos
     {
         reloj = horaEvento;
         tieneToken = 1; // A tiene token.
+        cantPorToken.add(contadorPorToken);
+        contadorPorToken = 0;
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -329,6 +348,8 @@ public class Eventos
     {
         reloj = horaEvento;
         tieneToken = 2; // B tiene token.
+        cantPorToken.add(contadorPorToken);
+        contadorPorToken = 0;
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -427,6 +448,8 @@ public class Eventos
     {
         reloj = horaEvento;
         tieneToken = 3; // C tiene token.
+        cantPorToken.add(contadorPorToken);
+        contadorPorToken = 0;
         tiempo = tiempoToken;
         tiempoTransferencia = 0;
         int i = 0;
@@ -1243,7 +1266,20 @@ public class Eventos
        return x;
     }
     
-    public static void main (String args [])
+    /************************ CÁLCULO DE ESTADÍSTICAS *************************/
+    
+    public void calcularEstadisticas()
     {
+        promedioEnviadosToken = promedioEnviadosPorToken();
+    }
+    
+    public int promedioEnviadosPorToken()
+    {
+        int total = 0;
+        for(int i = 0; i < cantPorToken.size(); i++)
+        {
+            total += cantPorToken.get(i);
+        }
+        return total/cantPorToken.size();
     }
 }
