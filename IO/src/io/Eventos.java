@@ -1283,12 +1283,12 @@ public class Eventos
     
     public double promedioEnviadosPorToken()
     {
-        int total = 0;
+        double total = 0;
         for(int i = 0; i < cantPorToken.size(); i++)
         {
-            total += cantPorToken.get(i);
+            total += (double) cantPorToken.get(i);
         }
-        return total/cantPorToken.size();
+        return total/((double)cantPorToken.size());
     }
     
     public double promedioRevisionesPorArchivo()
@@ -1298,7 +1298,6 @@ public class Eventos
         {
             total += (double) cantRevArchv.get(i);
         }
-        System.out.println(total);
         return total/((double)cantRevArchv.size());
     }
 }
