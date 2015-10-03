@@ -101,11 +101,13 @@ public class Eventos
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
         }
-    
-        
         salida = new Salida(this);
+    }
     
-    
+    public void enviarArchivos(){
+        eventos[0] = reloj;
+        eventos[1] = reloj;
+        eventos[2] = reloj;
     }
     
     public void iniciarSimulacion()
@@ -151,11 +153,20 @@ public class Eventos
                                 break;
                         case 2: llegaArchivoC(eventos[2]);
                                 break;
-                        case 3: ARecibeToken(eventos[3]);
+                        case 3: if(filaA== filaB && filaB==filaC && filaC==0){
+                                    enviarArchivos();
+                                }
+                                ARecibeToken(eventos[3]);
                                 break;
-                        case 4: BRecibeToken(eventos[4]);
+                        case 4: if(filaA== filaB && filaB==filaC && filaC==0){
+                                    enviarArchivos();
+                                } 
+                            BRecibeToken(eventos[4]);
                                 break;
-                        case 5: CRecibeToken(eventos[5]);
+                        case 5: if(filaA== filaB && filaB==filaC && filaC==0){
+                                    enviarArchivos();
+                                }
+                            CRecibeToken(eventos[5]);
                                 break;
                         case 6: ATerminaPonerLinea(eventos[6]);
                                 contadorPorToken++; // Para estadísticas
