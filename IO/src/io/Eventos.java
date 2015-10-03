@@ -101,7 +101,11 @@ public class Eventos
         {
             eventos[i] = Double.MAX_VALUE; // Se inicializan en un número muy grande.
         }
+    
+        
         salida = new Salida(this);
+    
+    
     }
     
     public void iniciarSimulacion()
@@ -112,13 +116,33 @@ public class Eventos
         }
         for(int i = 0; i < vecesSimulacion; i++)    // Realiza la simulación la cantidad de veces deseada.
         {
-            reloj = 0 ;
+            
+        filaA = filaB = filaC = filaAntivirus = filaRouter = 0;
+        archivosEnviados = archivosNoEnviados = enviadosL1 = enviadosL2 = 0;
+        contadorPorToken =0;
+   
+        
+        cantPorToken.clear();
+        cantRevArchv.clear();
+        
+        filaAP1.clear();
+        filaAP2.clear(); 
+        filaBP1.clear();
+        filaBP2.clear();
+        filaCP1.clear();
+        filaCP2.clear();
+        colaAntivirus.clear();
+        colaRouter.clear();
+        reloj = 0 ;
+            System.out.println("corrida numero "+(i+1));
+            
             inicializarEventos();
             while(reloj < tiempoTotalSimulacion)    // Durante el tiempo definido por usuario.
             {
                 numeroEvento = proximoEvento();     // El próximo evento es el que ocurra más pronto (menor tiempo). 
                 if(numeroEvento != -1)              // Solo para asegurarse que haya algún evento.
                 {
+                    System.out.println("corrida "+(i+1)+" reloj "+reloj+" evento "+numeroEvento +" FilaA "+filaA+" FilaB "+filaB+" FilaC "+filaC);
                     switch(numeroEvento)
                     {
                         case 0: llegaArchivoA(eventos[0]);
